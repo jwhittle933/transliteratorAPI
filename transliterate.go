@@ -34,20 +34,18 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, `{"code": 200, "message": "transliterator API" }`)
 	})
-	e.GET("/users/:id", getUser)
 	e.GET("/transliterate", engine.MainHandler)
+	e.POST("/upload", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, `{"code": 200, "message": "uploade a file" }`)
+	})
+
+	e.GET("/users/:id", getUser)
 	e.Logger.Fatal(e.Start(":3000"))
 }
 
 func getUser(c echo.Context) error {
 	id := c.Param("id")
 	return c.String(http.StatusOK, id)
-}
-
-func hebrew(c echo.Context) error {
-	team := c.QueryParam("team")
-	member := c.QueryParam("member")
-	return c.String(http.StatusOK, "team:"+team+", member:"+member)
 }
 
 func NewText(c echo.Context) (err error) {

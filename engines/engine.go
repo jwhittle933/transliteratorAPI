@@ -18,9 +18,7 @@ func MainHandler(c echo.Context) error {
 		return c.String(http.StatusOK, "No language or text submitted.")
 	}
 	output := transliterate(lang, text)
-	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
-		"output": output,
-	})
+	return c.JSON(http.StatusOK, output)
 }
 
 func transliterate(language string, text string) string {
