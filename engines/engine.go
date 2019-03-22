@@ -44,3 +44,11 @@ func transliterate(language string, text string) string {
 	}
 	return str
 }
+
+func NewText(c echo.Context) (err error) {
+	t := new(Text)
+	if err = c.Bind(t); err != nil {
+		return
+	}
+	return c.JSON(http.StatusOK, t)
+}

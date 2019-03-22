@@ -8,11 +8,6 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-type Text struct {
-	Body string `json:"body" form:"body" query:"body"`
-	Lang string `json:"lang" form:"lang" query:"lang"`
-}
-
 type Resp struct {
 	Code    int64
 	Message string
@@ -59,12 +54,4 @@ func main() {
 func getUser(c echo.Context) error {
 	id := c.Param("id")
 	return c.String(http.StatusOK, id)
-}
-
-func NewText(c echo.Context) (err error) {
-	t := new(Text)
-	if err = c.Bind(t); err != nil {
-		return
-	}
-	return c.JSON(http.StatusOK, t)
 }
