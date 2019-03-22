@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	engine "./engines"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -34,8 +35,8 @@ func main() {
 		return c.JSON(http.StatusOK, `{"code": 200, "message": "transliterator API" }`)
 	})
 	e.GET("/users/:id", getUser)
-	e.GET("/hebrew", hebrew)
-	e.Logger.Fatal(e.Start(":1323"))
+	e.GET("/transliterate", engine.MainHandler)
+	e.Logger.Fatal(e.Start(":3000"))
 }
 
 func getUser(c echo.Context) error {

@@ -6,6 +6,11 @@ import (
 	"github.com/labstack/echo"
 )
 
+type Text struct {
+	Body string `json:"body" form:"body" query:"body"`
+	Lang string `json:"lang" form:"lang" query:"lang"`
+}
+
 func MainHandler(c echo.Context) error {
 	lang := c.QueryParam("language")
 	text := c.QueryParam("text")
