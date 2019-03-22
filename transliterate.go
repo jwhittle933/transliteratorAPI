@@ -33,10 +33,6 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, `{"code": 200, "message": "transliterator API" }`)
 	})
-
-	e.GET("/users", func(c echo.Context) error {
-		return c.String(http.StatusOK, "/users")
-	})
 	e.GET("/users/:id", getUser)
 	e.GET("/hebrew", hebrew)
 	e.Logger.Fatal(e.Start(":1323"))
