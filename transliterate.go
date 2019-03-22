@@ -3,13 +3,14 @@ package main
 import (
 	"net/http"
 
+	engine "./engines"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
-type Text struct {
-	Body string `json:"body" form:"body" query:"body"`
-	Lang string `json:"lang" form:"lang" query:"lang"`
+type Resp struct {
+	Code    int64
+	Message string
 }
 
 func main() {
@@ -31,28 +32,26 @@ func main() {
 	})
 
 	e.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, `{"code": 200, "message": "transliterator API" }`)
+		resp := &Resp{
+			Code:    200,
+			Message: "Transliterator API",
+		}
+		return c.JSON(http.StatusOK, resp)
 	})
+	e.GET("/transliterate", engine.MainHandler)
+	e.POST("/upload", func(c echo.Context) error {
+		resp := &Resp{
+			Code:    200,
+			Message: "Upload a file",
+		}
+		return c.JSON(http.StatusOK, resp)
+	})
+
 	e.GET("/users/:id", getUser)
-	e.GET("/hebrew", hebrew)
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":3000"))
 }
 
 func getUser(c echo.Context) error {
 	id := c.Param("id")
 	return c.String(http.StatusOK, id)
-}
-
-func hebrew(c echo.Context) error {
-	team := c.QueryParam("team")
-	member := c.QueryParam("member")
-	return c.String(http.StatusOK, "team:"+team+", member:"+member)
-}
-
-func NewText(c echo.Context) (err error) {
-	t := new(Text)
-	if err = c.Bind(t); err != nil {
-		return
-	}
-	return c.JSON(http.StatusOK, t)
 }
