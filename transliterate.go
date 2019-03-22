@@ -13,6 +13,11 @@ type Text struct {
 	Lang string `json:"lang" form:"lang" query:"lang"`
 }
 
+type Resp struct {
+	Code    int64
+	Message string
+}
+
 func main() {
 	e := echo.New()
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -32,11 +37,19 @@ func main() {
 	})
 
 	e.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, `{"code": 200, "message": "transliterator API" }`)
+		resp := &Resp{
+			Code:    200,
+			Message: "Transliterator API",
+		}
+		return c.JSON(http.StatusOK, resp)
 	})
 	e.GET("/transliterate", engine.MainHandler)
 	e.POST("/upload", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, `{"code": 200, "message": "uploade a file" }`)
+		resp := &Resp{
+			Code:    200,
+			Message: "Upload a file",
+		}
+		return c.JSON(http.StatusOK, resp)
 	})
 
 	e.GET("/users/:id", getUser)
