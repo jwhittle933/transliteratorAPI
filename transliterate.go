@@ -23,15 +23,15 @@ func main() {
 			// check
 
 			// For invalid credentials
-			return echo.NewHTTPError(http.StatusUnauthorized, "Please provide valid credentials")
+			// return echo.NewHTTPError(http.StatusUnauthorized, "Please provide valid credentials")
 
 			// For valid credentials call next
-			// return next(c)
+			return next(c)
 		}
 	})
 
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
+		return c.JSON(http.StatusOK, `{"code": 200, "message": "transliterator API" }`)
 	})
 
 	e.GET("/users", func(c echo.Context) error {
