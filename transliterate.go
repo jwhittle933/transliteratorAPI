@@ -3,11 +3,12 @@ package main
 import (
 	"net/http"
 
-	engine "./engines"
+	transliterate "./controllers"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
+// Resp struct for response schema
 type Resp struct {
 	Code    int64
 	Message string
@@ -37,17 +38,28 @@ func main() {
 			Message: "Transliterator API",
 		}
 		return c.JSON(http.StatusOK, resp)
-	})
-	e.GET("/transliterate", engine.Transliterator)
+	}).Name = "home-route"
+
+	e.GET("/transliterate", transliterate.Transliterator).Name = "transliterate-query"
+
 	e.POST("/upload", func(c echo.Context) error {
 		resp := &Resp{
 			Code:    200,
 			Message: "Upload a file",
 		}
 		return c.JSON(http.StatusOK, resp)
-	})
+	}).Name = "transliterate-upload"
 
 	e.GET("/users/:id", getUser)
+
+	auth := e.Group("/auth")
+	auth.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+		if username == "Joe" && password == "password" {
+			return true, nil
+		}
+		return false, nil
+	}))
+
 	e.Logger.Fatal(e.Start(":3000"))
 }
 

@@ -1,45 +1,13 @@
 package engine
 
-import (
-	"net/http"
+var mGreek = map[string]string{"α": "a", "β": "b", "γ": "g", "δ": "d", "ε": "e", "ζ": "z", "η": "e", "θ": "th", "ι": "i", "κ": "k", "λ": "l", "μ": "m", "ν": "n", "ξ": "ks", "ο": "o", "π": "p", "ρ": "r", "σ": "s", "ς": "s", "τ": "t", "υ": "y", "φ": "ph", "χ": "ch", "ψ": "ps", "ω": "o"}
+var mHebrew = map[string]string{"א": "'", "ב": "b", "ג": "g", "ד": "d", "ה": "h", "ו": "w", "ז": "z", "ח": "ch", "ט": "t", "י": "y", "כ": "k", "ך": "k", "ל": "l", "מ": "m", "ם": "m", "נ": "n", "ן": "n", "ס": "s", "ע": "'", "פ": "p", "ף": "ph", "צ": "ts", "ץ": "ts", "ק": "q", "ר": "r", "שׁ": "s", "שׂ": "sh", "ת": "th"}
 
-	"github.com/labstack/echo"
-)
-
-type Text struct {
-	Body string `json:"body" form:"body" query:"body"`
-	Lang string `json:"lang" form:"lang" query:"lang"`
-}
-
-type Error struct {
-	code    int64
-	message string
-}
-
-func Transliterator(c echo.Context) error {
-	lang := c.QueryParam("language")
-	text := c.QueryParam("text")
-	if len(lang) == 0 {
-		erm := &Error{
-			code:    400,
-			message: "No language specified.",
-		}
-		return c.JSON(http.StatusOK, erm)
-	}
-	if len(text) == 0 {
-		erm := &Error{
-			code:    400,
-			message: "No text specified.",
-		}
-		return c.JSON(http.StatusOK, erm)
-	}
-	output := transliterate(lang, text)
-	return c.JSON(http.StatusOK, output)
-}
-
-func transliterate(language string, text string) string {
+// Transliterate func is the engine of the api
+func Transliterate(language string, text string) string {
 	var str string
 	if language == "Greek" {
+		// TODO abstract this loop
 		for _, value := range text {
 			letter := string(value)
 			if letter == " " {
@@ -49,6 +17,7 @@ func transliterate(language string, text string) string {
 			}
 		}
 	} else if language == "Hebrew" {
+		// TODO abstract this loop
 		for _, value := range text {
 			letter := string(value)
 			if letter == " " {
@@ -58,13 +27,19 @@ func transliterate(language string, text string) string {
 			}
 		}
 	}
+
 	return str
 }
 
-func NewText(c echo.Context) (err error) {
-	t := new(Text)
-	if err = c.Bind(t); err != nil {
-		return
-	}
-	return c.JSON(http.StatusOK, t)
+// LauguageCheck for determining language and text correspond
+func LauguageCheck(lang string, text string) bool {
+	return true
+}
+
+// OneOf used to link a char to a map
+func OneOf(text string) bool {
+	// for _, val := range text {
+	// 	string(val)
+	// }
+	return false
 }
