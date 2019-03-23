@@ -7,6 +7,7 @@ var mHebrew = map[string]string{"א": "'", "ב": "b", "ג": "g", "ד": "d", "ה"
 func Transliterate(language string, text string) string {
 	var str string
 	if language == "Greek" {
+		// TODO abstract this loop
 		for _, value := range text {
 			letter := string(value)
 			if letter == " " {
@@ -16,6 +17,7 @@ func Transliterate(language string, text string) string {
 			}
 		}
 	} else if language == "Hebrew" {
+		// TODO abstract this loop
 		for _, value := range text {
 			letter := string(value)
 			if letter == " " {
@@ -36,5 +38,8 @@ func LauguageCheck(lang string, text string) bool {
 
 // OneOf used to link a char to a map
 func OneOf(text string) bool {
+	for _, val := range text {
+		string(val)
+	}
 	return false
 }
