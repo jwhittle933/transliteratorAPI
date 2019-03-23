@@ -39,7 +39,7 @@ func main() {
 		return c.JSON(http.StatusOK, resp)
 	}).Name = "home-route"
 
-	e.GET("/transliterate", transliterate.Transliterator).Name = "transliterate-query"
+	e.GET("/transliterate", transliterate.GetTransliterate).Name = "transliterate-query"
 
 	e.POST("/upload", func(c echo.Context) error {
 		resp := &Resp{
