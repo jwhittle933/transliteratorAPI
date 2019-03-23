@@ -19,17 +19,17 @@ type Error struct {
 func Transliterator(c echo.Context) error {
 	lang := c.QueryParam("language")
 	text := c.QueryParam("text")
-	if len(lang) == 0 || len(text) == 0 {
+	if len(lang) == 0 {
 		erm := &Error{
 			code:    400,
-			message: "Insufficient data.",
+			message: "No language specified.",
 		}
 		return c.JSON(http.StatusOK, erm)
 	}
 	if len(text) == 0 {
 		erm := &Error{
 			code:    400,
-			message: "Insufficient data.",
+			message: "No text specified.",
 		}
 		return c.JSON(http.StatusOK, erm)
 	}
