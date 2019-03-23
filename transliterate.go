@@ -38,7 +38,7 @@ func main() {
 		}
 		return c.JSON(http.StatusOK, resp)
 	})
-	e.GET("/transliterate", engine.MainHandler)
+	e.GET("/transliterate", engine.Transliterator)
 	e.POST("/upload", func(c echo.Context) error {
 		resp := &Resp{
 			Code:    200,

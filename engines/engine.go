@@ -11,11 +11,27 @@ type Text struct {
 	Lang string `json:"lang" form:"lang" query:"lang"`
 }
 
-func MainHandler(c echo.Context) error {
+type Error struct {
+	code    int64
+	message string
+}
+
+func Transliterator(c echo.Context) error {
 	lang := c.QueryParam("language")
 	text := c.QueryParam("text")
 	if len(lang) == 0 || len(text) == 0 {
-		return c.String(http.StatusOK, "No language or text submitted.")
+		erm := &Error{
+			code:    400,
+			message: "Insufficient data.",
+		}
+		return c.JSON(http.StatusOK, erm)
+	}
+	if len(text) == 0 {
+		erm := &Error{
+			code:    400,
+			message: "Insufficient data.",
+		}
+		return c.JSON(http.StatusOK, erm)
 	}
 	output := transliterate(lang, text)
 	return c.JSON(http.StatusOK, output)
