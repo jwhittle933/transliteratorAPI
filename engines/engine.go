@@ -11,33 +11,7 @@ type Text struct {
 	Lang string `json:"lang" form:"lang" query:"lang"`
 }
 
-type Error struct {
-	code    int64
-	message string
-}
-
-func Transliterator(c echo.Context) error {
-	lang := c.QueryParam("language")
-	text := c.QueryParam("text")
-	if len(lang) == 0 {
-		erm := &Error{
-			code:    400,
-			message: "No language specified.",
-		}
-		return c.JSON(http.StatusOK, erm)
-	}
-	if len(text) == 0 {
-		erm := &Error{
-			code:    400,
-			message: "No text specified.",
-		}
-		return c.JSON(http.StatusOK, erm)
-	}
-	output := transliterate(lang, text)
-	return c.JSON(http.StatusOK, output)
-}
-
-func transliterate(language string, text string) string {
+func Transliterate(language string, text string) string {
 	var str string
 	if language == "Greek" {
 		for _, value := range text {
@@ -58,6 +32,7 @@ func transliterate(language string, text string) string {
 			}
 		}
 	}
+
 	return str
 }
 
