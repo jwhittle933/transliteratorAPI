@@ -5,7 +5,10 @@ var mHebrew = map[string]string{"א": "'", "ב": "b", "ג": "g", "ד": "d", "ה"
 
 // Transliterate func is the engine of the api.
 func Transliterate(text string) (lang string, str string) {
-	lang = OneOf(text)
+	lang = WhichLang(text)
+	if lang == "None." {
+		return "Unsupported Language.", "Error."
+	}
 	if lang == "Greek" {
 		// TODO abstract this loop
 		for _, value := range text {
@@ -31,17 +34,17 @@ func Transliterate(text string) (lang string, str string) {
 	return lang, str
 }
 
-// LauguageCheck for determining language and text correspond.
-func LauguageCheck(lang string, text string) bool {
-	return true
-}
-
-// OneOf used for language autodetect.
-func OneOf(text string) string {
+// WhichLang used for language autodetect.
+func WhichLang(text string) string {
 	for _, val := range text {
 		if x := mGreek[string(val)]; x != "" {
 			return "Greek"
 		}
 	}
-	return "Hebrew"
+	for _, val := range text {
+		if x := mHebrew[string(val)]; x != "" {
+			return "Hebrew"
+		}
+	}
+	return "None."
 }

@@ -33,13 +33,19 @@ func Transliterator(c echo.Context) error {
 		}
 		return c.JSON(http.StatusBadRequest, erm)
 	}
-	lang, output := engine.Transliterate(text)
-	response := &SuccessfulResponse{
-		Code:               http.StatusOK,
-		Message:            "Successful.",
-		Language:           lang,
-		SubmittedText:      text,
-		TransliteratedText: output,
+	if lang, output := engine.Transliterate(text); output != "Error." {
+		response := &SuccessfulResponse{
+			Code:               http.StatusOK,
+			Message:            "Successful.",
+			Language:           lang,
+			SubmittedText:      text,
+			TransliteratedText: output,
+		}
+		return c.JSON(http.StatusOK, response)
 	}
-	return c.JSON(http.StatusOK, response)
+	response := &ErrorMessage{
+		Code:    http.StatusBadRequest,
+		Message: "Error",
+	}
+	return c.JSON(http.StatusBadRequest, response)
 }
