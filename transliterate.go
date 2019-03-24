@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-// Resp struct for response schema
+// Resp struct for response schema.
 type Resp struct {
 	Code    int64
 	Message string

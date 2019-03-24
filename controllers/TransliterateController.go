@@ -13,6 +13,15 @@ type ErrorMessage struct {
 	Message string
 }
 
+// SuccessfulResponse struct.
+type SuccessfulResponse struct {
+	Code               int64
+	Message            string
+	Language           string
+	SubmittedText      string
+	TransliteratedText string
+}
+
 // Transliterator route handler
 func Transliterator(c echo.Context) error {
 	var erm *ErrorMessage
@@ -20,18 +29,25 @@ func Transliterator(c echo.Context) error {
 	text := c.QueryParam("text")
 	if len(lang) == 0 {
 		erm = &ErrorMessage{
-			Code:    400,
+			Code:    http.StatusBadRequest,
 			Message: "No language specified.",
 		}
 		return c.JSON(http.StatusBadRequest, erm)
 	}
 	if len(text) == 0 {
 		erm = &ErrorMessage{
-			Code:    400,
+			Code:    http.StatusBadRequest,
 			Message: "No text provided.",
 		}
 		return c.JSON(http.StatusBadRequest, erm)
 	}
 	output := engine.Transliterate(lang, text)
-	return c.JSON(http.StatusOK, output)
+	response := &SuccessfulResponse{
+		Code:               http.StatusOK,
+		Message:            "Successful.",
+		Language:           lang,
+		SubmittedText:      text,
+		TransliteratedText: output,
+	}
+	return c.JSON(http.StatusOK, response)
 }
