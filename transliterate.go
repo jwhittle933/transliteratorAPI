@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	transliterate "./controllers"
+	"./controllers"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -21,9 +21,6 @@ func main() {
 	}))
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			// Extract the credentials from HTTP request header and perform a security
-			// check
-
 			// For invalid credentials
 			// return echo.NewHTTPError(http.StatusUnauthorized, "Please provide valid credentials")
 
@@ -40,7 +37,7 @@ func main() {
 		return c.JSON(http.StatusOK, resp)
 	}).Name = "home-route"
 
-	e.GET("/transliterate", transliterate.Transliterator).Name = "transliterate-query"
+	e.GET("/transliterate", controllers.Transliterator).Name = "transliterate-query"
 
 	e.POST("/upload", func(c echo.Context) error {
 		resp := &Resp{
