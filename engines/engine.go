@@ -37,6 +37,7 @@ func LauguageCheck(lang string, text string) bool {
 }
 
 // OneOf used to link a char to a map
+// Autodetect langauge
 func OneOf(text string) bool {
 	// for _, val := range text {
 	// 	string(val)
