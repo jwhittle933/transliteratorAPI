@@ -11,7 +11,10 @@ if [ -d ~/go ];
         fi
     else
         echo "Didn't find ${HOME}/go. Creating directory." 
-        touch ${HOME}/go
+        mkdir ~/go
+        mkdir ~/go/src
+        mkdir ~/go/bin
+        mkdir ~/go/pkg
         echo "Created ${HOME}/go\n"
         echo "Setting go variables."
         setVars
