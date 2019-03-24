@@ -1,11 +1,20 @@
 if [ -d ~/go ]; 
     then
-        echo "Found ${HOME}/go\n"
-        echo "Setting go variables."
-        setVars 
-    else 
+        echo ">>>  Found ${HOME}/go"
+        if [ -n "$GOPATH" ]; 
+            then 
+                echo ">>>  Found GOPATH ${GOPATH}."
+                echo ">>>  Please ensure that your go variables are set correctly."
+            else 
+                echo "Setting go variables."
+                setVars 
+        fi
+    else
+        echo "Didn't find ${HOME}/go. Creating directory." 
         touch ${HOME}/go
         echo "Created ${HOME}/go\n"
+        echo "Setting go variables."
+        setVars
 fi
 
 
