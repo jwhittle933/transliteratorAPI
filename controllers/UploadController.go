@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -39,38 +39,38 @@ func ValidateFile(w http.ResponseWriter, r *http.Request) {
 
 // ProcessFile for reading uploaded file
 func ProcessFile(c echo.Context) error {
-	var (
-		newFile *os.File
-		err     error
-	)
 
-	newFile, err = os.Create("test.txt")
-	check(err)
-	log.Println(newFile)
-	newFile.Close()
+	file, err := c.FormFile("file")
+	if err != nil {
+		return err
+	}
 
-	// data, err := ioutil.ReadFile("test.txt")
-	// check(err)
-	// fmt.Println(data)
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
 
-	// f, err := os.Open("test.txt")
-	// check(err)
+	defer src.Close()
 
-	// b1 := make([]byte, 5)
-	// n1, err := f.Read(b1)
-	// check(err)
-	// fmt.Printf("%d bytes: %s\n", n1, string(b1))
+	dst, err := os.Create(file.Filename)
+	if err != nil {
+		return err
+	}
 
-	// read := bufio.NewReader(f)
-	// b4, err := read.Peek(5)
-	// check(err)
-	// fmt.Printf("5 bytes: %s\n", string(b4))
+	readFile, err := os.Open(file.Filename)
+	defer readFile.Close()
+
+	fileInfo, err := readFile.Stat()
+	fileSize := fileInfo.Size()
+
+	buffer := make([]byte, fileSize)
+	bytespread, err := readFile.Read(buffer)
+
+	fmt.Println("Bytes: ", bytespread)
+	fmt.Println(buffer)
+	readFile.Close()
+
+	defer dst.Close()
 
 	return c.JSON(http.StatusOK, "OK.")
-}
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
 }
