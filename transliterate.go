@@ -69,7 +69,7 @@ func main() {
 	}).Name = "home-route"
 
 	e.GET("/transliterate", controllers.Transliterator).Name = "transliterate-query"
-	e.GET("/upload", controllers.ProcessFile)
+	e.GET("/upload", controllers.ProcessFile).Name = "file-upload"
 	e.POST("/upload", func(c echo.Context) error {
 		resp := &Resp{
 			Code:    200,
