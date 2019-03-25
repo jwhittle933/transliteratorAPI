@@ -69,14 +69,14 @@ func main() {
 	}).Name = "home-route"
 
 	e.GET("/transliterate", controllers.Transliterator).Name = "transliterate-query"
-	e.GET("/upload", controllers.ProcessFile)
-	e.POST("/upload", func(c echo.Context) error {
+	e.GET("/upload", func(c echo.Context) error {
 		resp := &Resp{
 			Code:    200,
 			Message: "Upload a file",
 		}
 		return c.JSON(http.StatusOK, resp)
-	}).Name = "transliterate-upload"
+	})
+	e.POST("/upload", controllers.ProcessFile).Name = "transliterate-upload"
 
 	e.GET("/users/:id", getUser)
 
