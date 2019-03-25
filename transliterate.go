@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"database/sql"
+
 	"./controllers"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/thedevsaddam/govalidator"
@@ -64,7 +67,7 @@ func main() {
 	}).Name = "home-route"
 
 	e.GET("/transliterate", controllers.Transliterator).Name = "transliterate-query"
-
+	e.GET("/upload", controllers.ProcessFile)
 	e.POST("/upload", func(c echo.Context) error {
 		resp := &Resp{
 			Code:    200,
@@ -89,4 +92,10 @@ func main() {
 func getUser(c echo.Context) error {
 	id := c.Param("id")
 	return c.String(http.StatusOK, id)
+}
+
+func initDb() (*sql.DB, error) {
+	// https://github.com/go-sql-driver/mysql
+	db, err := sql.Open("mysql", "root:[password]@/transliterator")
+	return db, err
 }
