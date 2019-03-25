@@ -28,9 +28,9 @@ func Transliterator(c echo.Context) error {
 		}
 		return c.JSON(http.StatusOK, response)
 	}
-	response := &ErrorMessage{
+	erm = &ErrorMessage{
 		Code:    http.StatusBadRequest,
 		Message: "Error",
 	}
-	return c.JSON(http.StatusBadRequest, response)
+	return c.JSON(http.StatusBadRequest, erm)
 }
