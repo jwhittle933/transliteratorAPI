@@ -34,6 +34,9 @@ func ValidateFile(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(err)
 }
 
+// https://www.devdungeon.com/content/working-files-go#everything_is_a_file
+// https://golang.org/pkg/os/#File.Close
+
 // ProcessFile for reading uploaded file
 func ProcessFile(c echo.Context) error {
 	var (

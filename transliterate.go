@@ -13,6 +13,8 @@ import (
 	"github.com/thedevsaddam/govalidator"
 )
 
+// https://github.com/golang/go/wiki/CodeReviewComments
+
 // Resp struct for response schema.
 type Resp struct {
 	Code    int64
