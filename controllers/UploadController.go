@@ -39,7 +39,6 @@ func ValidateFile(w http.ResponseWriter, r *http.Request) {
 
 // ProcessFile for reading uploaded file
 func ProcessFile(c echo.Context) error {
-
 	file, err := c.FormFile("file")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, &ErrorMessage{
@@ -47,6 +46,7 @@ func ProcessFile(c echo.Context) error {
 			Message: "There was an error receiving the file.",
 		})
 	}
+	fmt.Println("Print file: ", file)
 
 	src, err := file.Open()
 	if err != nil {
@@ -55,8 +55,7 @@ func ProcessFile(c echo.Context) error {
 			Message: "There was an error opening your file.",
 		})
 	}
-
-	defer src.Close()
+	fmt.Println("Print src: ", src)
 
 	dst, err := os.Create(file.Filename)
 	if err != nil {
@@ -65,6 +64,7 @@ func ProcessFile(c echo.Context) error {
 			Message: "There was an error accessing your file.",
 		})
 	}
+	fmt.Println("Print dst: ", dst)
 
 	readFile, err := os.Open(file.Filename)
 	if err != nil {
@@ -73,18 +73,20 @@ func ProcessFile(c echo.Context) error {
 			Message: "There was an error reading your file.",
 		})
 	}
-	defer readFile.Close()
-
+	b := make([]byte, 10)
+	f, err := readFile.Read(b)
+	fmt.Println("Print f: ", f)
 	fileInfo, err := readFile.Stat()
 	fileSize := fileInfo.Size()
-
 	buffer := make([]byte, fileSize)
 	bytespread, err := readFile.Read(buffer)
-
+	fmt.Println("FileInfo: ", fileInfo)
+	fmt.Println("FileSize: ", fileSize)
 	fmt.Println("Bytes: ", bytespread)
-	fmt.Println(buffer)
-	readFile.Close()
+	fmt.Println("Buffer: ", buffer)
 
+	defer src.Close()
+	defer readFile.Close()
 	defer dst.Close()
 
 	return c.JSON(http.StatusOK, "OK.")

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	engine "../engines"
@@ -10,6 +11,8 @@ import (
 // Transliterator route handler
 func Transliterator(c echo.Context) error {
 	var erm *ErrorMessage
+	req := c.Request()
+	fmt.Println(req)
 	text := c.QueryParam("text")
 	if len(text) == 0 {
 		erm = &ErrorMessage{
