@@ -60,23 +60,16 @@ func main() {
 		}
 	})
 
-	e.GET("/", func(c echo.Context) error {
-		resp := &Resp{
-			Code:    200,
-			Message: "Transliterator API",
-		}
-		return c.JSON(http.StatusOK, resp)
-	}).Name = "home-route"
-
-	e.GET("/transliterate", controllers.Transliterator).Name = "transliterate-query"
-	e.GET("/upload", controllers.ProcessFile).Name = "file-upload"
-	e.POST("/upload", func(c echo.Context) error {
+	e.GET("/", baseRouteHandler)
+	e.GET("/transliterate", controllers.Transliterator)
+	e.POST("/upload", controllers.ProcessFile)
+	e.GET("/upload", func(c echo.Context) error {
 		resp := &Resp{
 			Code:    200,
 			Message: "Upload a file",
 		}
 		return c.JSON(http.StatusOK, resp)
-	}).Name = "transliterate-upload"
+	})
 
 	e.GET("/users/:id", getUser)
 
@@ -100,4 +93,12 @@ func initDb() (*sql.DB, error) {
 	// https://github.com/go-sql-driver/mysql
 	db, err := sql.Open("mysql", "root:[password]@/transliterator")
 	return db, err
+}
+
+func baseRouteHandler(c echo.Context) error {
+	resp := &Resp{
+		Code:    200,
+		Message: "Transliterator API",
+	}
+	return c.JSON(http.StatusOK, resp)
 }

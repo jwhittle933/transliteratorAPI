@@ -42,22 +42,37 @@ func ProcessFile(c echo.Context) error {
 
 	file, err := c.FormFile("file")
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
+			Code:    http.StatusBadRequest,
+			Message: "There was an error receiving the file.",
+		})
 	}
 
 	src, err := file.Open()
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
+			Code:    http.StatusBadRequest,
+			Message: "There was an error opening your file.",
+		})
 	}
 
 	defer src.Close()
 
 	dst, err := os.Create(file.Filename)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
+			Code:    http.StatusBadRequest,
+			Message: "There was an error accessing your file.",
+		})
 	}
 
 	readFile, err := os.Open(file.Filename)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
+			Code:    http.StatusBadRequest,
+			Message: "There was an error reading your file.",
+		})
+	}
 	defer readFile.Close()
 
 	fileInfo, err := readFile.Stat()

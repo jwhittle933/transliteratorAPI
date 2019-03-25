@@ -7,21 +7,6 @@ import (
 	"github.com/labstack/echo"
 )
 
-// ErrorMessage for forming error repsonses
-type ErrorMessage struct {
-	Code    int64
-	Message string
-}
-
-// SuccessfulResponse struct.
-type SuccessfulResponse struct {
-	Code               int64
-	Message            string
-	Language           string
-	SubmittedText      string
-	TransliteratedText string
-}
-
 // Transliterator route handler
 func Transliterator(c echo.Context) error {
 	var erm *ErrorMessage
