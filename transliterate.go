@@ -18,13 +18,11 @@ type Resp struct {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	rules := govalidator.MapData{
-		"username": []string{"required", "between:3,8"},
-		"email":    []string{"required", "min:4", "max:20", "email"},
+		"file:text": []string{"ext:txt, docx", "size:100000", "mime:txt, docx", "required"},
 	}
 
 	messages := govalidator.MapData{
-		"username": []string{"required:আপনাকে অবশ্যই ইউজারনেম দিতে হবে", "between:ইউজারনেম অবশ্যই ৩-৮ অক্ষর হতে হবে"},
-		"phone":    []string{"digits:ফোন নাম্বার অবশ্যই ১১ নম্বারের হতে হবে"},
+		"file:text": []string{"ext:Only txt/docx allowed", "required:document is required"},
 	}
 
 	opts := govalidator.Options{
