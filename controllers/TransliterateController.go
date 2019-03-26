@@ -1,30 +1,18 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	engine "../engines"
 	"github.com/labstack/echo"
 )
 
-// ErrorMessage for forming error repsonses
-type ErrorMessage struct {
-	Code    int64
-	Message string
-}
-
-// SuccessfulResponse struct.
-type SuccessfulResponse struct {
-	Code               int64
-	Message            string
-	Language           string
-	SubmittedText      string
-	TransliteratedText string
-}
-
 // Transliterator route handler
 func Transliterator(c echo.Context) error {
 	var erm *ErrorMessage
+	req := c.Request()
+	fmt.Println(req)
 	text := c.QueryParam("text")
 	if len(text) == 0 {
 		erm = &ErrorMessage{
@@ -43,9 +31,9 @@ func Transliterator(c echo.Context) error {
 		}
 		return c.JSON(http.StatusOK, response)
 	}
-	response := &ErrorMessage{
+	erm = &ErrorMessage{
 		Code:    http.StatusBadRequest,
 		Message: "Error",
 	}
-	return c.JSON(http.StatusBadRequest, response)
+	return c.JSON(http.StatusBadRequest, erm)
 }

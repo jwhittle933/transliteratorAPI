@@ -2,13 +2,48 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"os"
 
+	"./uploader"
 	"github.com/labstack/echo"
 	"github.com/thedevsaddam/govalidator"
 )
+
+// https://www.devdungeon.com/content/working-files-go#everything_is_a_file
+
+// ProcessFile for reading uploaded file
+func ProcessFile(c echo.Context) error {
+	// TODO
+	// !! First, copy file to file system
+	// !! Then, use os package to read file
+	// !! Then, parse contents
+	// !! Lastly, write new contents to file and return to client
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
+			Code:    http.StatusBadRequest,
+			Message: "There was an error receiving the file.",
+		})
+	}
+
+	fileContents, err := uploader.ReadFile(file)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
+			Code:    http.StatusBadRequest,
+			Message: "There was an error receiving the file.",
+		})
+	}
+
+	resp := &SuccessfulResponse{
+		Code:               http.StatusOK,
+		Message:            "File Succesfully read.",
+		Language:           "Greek",
+		SubmittedText:      fileContents,
+		TransliteratedText: "Waiting...",
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}
 
 // ValidateFile func
 func ValidateFile(w http.ResponseWriter, r *http.Request) {
@@ -32,45 +67,4 @@ func ValidateFile(w http.ResponseWriter, r *http.Request) {
 	err := map[string]interface{}{"validationError": e}
 	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode(err)
-}
-
-// https://www.devdungeon.com/content/working-files-go#everything_is_a_file
-// https://golang.org/pkg/os/#File.Close
-
-// ProcessFile for reading uploaded file
-func ProcessFile(c echo.Context) error {
-
-	file, err := c.FormFile("file")
-	if err != nil {
-		return err
-	}
-
-	src, err := file.Open()
-	if err != nil {
-		return err
-	}
-
-	defer src.Close()
-
-	dst, err := os.Create(file.Filename)
-	if err != nil {
-		return err
-	}
-
-	readFile, err := os.Open(file.Filename)
-	defer readFile.Close()
-
-	fileInfo, err := readFile.Stat()
-	fileSize := fileInfo.Size()
-
-	buffer := make([]byte, fileSize)
-	bytespread, err := readFile.Read(buffer)
-
-	fmt.Println("Bytes: ", bytespread)
-	fmt.Println(buffer)
-	readFile.Close()
-
-	defer dst.Close()
-
-	return c.JSON(http.StatusOK, "OK.")
 }

@@ -7,6 +7,7 @@ import (
 	"database/sql"
 
 	"./controllers"
+	start "./init"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -46,7 +47,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", handler)
-	e := echo.New()
+	e := start.Init()
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
@@ -60,15 +61,9 @@ func main() {
 		}
 	})
 
-	e.GET("/", func(c echo.Context) error {
-		resp := &Resp{
-			Code:    200,
-			Message: "Transliterator API",
-		}
-		return c.JSON(http.StatusOK, resp)
-	}).Name = "home-route"
-
-	e.GET("/transliterate", controllers.Transliterator).Name = "transliterate-query"
+	e.GET("/", baseRouteHandler)
+	e.GET("/transliterate", controllers.Transliterator)
+	e.POST("/upload", controllers.ProcessFile)
 	e.GET("/upload", func(c echo.Context) error {
 		resp := &Resp{
 			Code:    200,
@@ -76,7 +71,6 @@ func main() {
 		}
 		return c.JSON(http.StatusOK, resp)
 	})
-	e.POST("/upload", controllers.ProcessFile).Name = "transliterate-upload"
 
 	e.GET("/users/:id", getUser)
 
@@ -100,4 +94,12 @@ func initDb() (*sql.DB, error) {
 	// https://github.com/go-sql-driver/mysql
 	db, err := sql.Open("mysql", "root:[password]@/transliterator")
 	return db, err
+}
+
+func baseRouteHandler(c echo.Context) error {
+	resp := &Resp{
+		Code:    200,
+		Message: "Transliterator API",
+	}
+	return c.JSON(http.StatusOK, resp)
 }
