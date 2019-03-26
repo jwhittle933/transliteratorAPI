@@ -5,6 +5,11 @@ var mHebrew = map[string]string{"א": "'", "ב": "b", "ג": "g", "ד": "d", "ה"
 
 // Transliterate func is the engine of the api.
 func Transliterate(text string) (lang string, str string) {
+	// TODO
+	// !! First, copy file to file system
+	// !! Then, use os package to read file
+	// !! Then, parse contents
+	// !! Lastly, write new contents to file and return to client
 	lang = WhichLang(text)
 	if lang == "None." {
 		return "Unsupported Language.", "Error."
