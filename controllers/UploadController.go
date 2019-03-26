@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	engine "../engines"
 	"./uploader"
 	"github.com/labstack/echo"
 	"github.com/thedevsaddam/govalidator"
@@ -34,12 +35,14 @@ func ProcessFile(c echo.Context) error {
 		})
 	}
 
+	lang, transliteratedContents := engine.Transliterate(fileContents)
+
 	resp := &SuccessfulResponse{
 		Code:               http.StatusOK,
 		Message:            "File Succesfully read.",
-		Language:           "Greek",
+		Language:           lang,
 		SubmittedText:      fileContents,
-		TransliteratedText: "Waiting...",
+		TransliteratedText: transliteratedContents,
 	}
 
 	return c.JSON(http.StatusOK, resp)
