@@ -6,7 +6,8 @@ import (
 	"mime/multipart"
 )
 
-func handleFile(file *multipart.FileHeader) (string, error) {
+// ReadFile consumes *multipart.FileHeader and returns string, error
+func ReadFile(file *multipart.FileHeader) (string, error) {
 
 	fileName := file.Filename
 	fmt.Println("Reading file: ", fileName)
@@ -16,15 +17,15 @@ func handleFile(file *multipart.FileHeader) (string, error) {
 
 	data, err := file.Open()
 	if err != nil {
-		return "", err
+		return "There was an error.", err
 	}
 
 	src, err := ioutil.ReadAll(data)
 	if err != nil {
-		return "", err
+		return "There was an error.", err
 	}
 	contents := string(src)
-	fmt.Printf("File data: %s\n: ", src)
+	// fmt.Printf("File data: %s\n: ", src)
 
-	return contents, err
+	return contents, nil
 }
