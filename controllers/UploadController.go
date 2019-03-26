@@ -3,8 +3,8 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
-	"os"
 
 	"github.com/labstack/echo"
 	"github.com/thedevsaddam/govalidator"
@@ -39,6 +39,11 @@ func ValidateFile(w http.ResponseWriter, r *http.Request) {
 
 // ProcessFile for reading uploaded file
 func ProcessFile(c echo.Context) error {
+	// TODO
+	// !! First, copy file to file system
+	// !! Then, use os package to read file
+	// !! Then, parse contents
+	// !! Lastly, write new contents to file and return to client
 	file, err := c.FormFile("file")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, &ErrorMessage{
@@ -48,46 +53,18 @@ func ProcessFile(c echo.Context) error {
 	}
 	fmt.Println("Print file: ", file)
 
-	src, err := file.Open()
+	data, err := file.Open()
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, &ErrorMessage{
-			Code:    http.StatusBadRequest,
-			Message: "There was an error opening your file.",
-		})
+		return err
 	}
-	fmt.Println("Print src: ", src)
 
-	dst, err := os.Create(file.Filename)
+	src, err := ioutil.ReadAll(data)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, &ErrorMessage{
-			Code:    http.StatusBadRequest,
-			Message: "There was an error accessing your file.",
-		})
+		return err
 	}
-	fmt.Println("Print dst: ", dst)
 
-	readFile, err := os.Open(file.Filename)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, &ErrorMessage{
-			Code:    http.StatusBadRequest,
-			Message: "There was an error reading your file.",
-		})
-	}
-	b := make([]byte, 10)
-	f, err := readFile.Read(b)
-	fmt.Println("Print f: ", f)
-	fileInfo, err := readFile.Stat()
-	fileSize := fileInfo.Size()
-	buffer := make([]byte, fileSize)
-	bytespread, err := readFile.Read(buffer)
-	fmt.Println("FileInfo: ", fileInfo)
-	fmt.Println("FileSize: ", fileSize)
-	fmt.Println("Bytes: ", bytespread)
-	fmt.Println("Buffer: ", buffer)
-
-	defer src.Close()
-	defer readFile.Close()
-	defer dst.Close()
+	text := string(src)
+	fmt.Printf("File data: %s\n", string(text))
 
 	return c.JSON(http.StatusOK, "OK.")
 }
