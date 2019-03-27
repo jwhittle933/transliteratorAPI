@@ -1,5 +1,7 @@
 package controllers
 
+import "os"
+
 // ErrorMessage for forming error repsonses
 type ErrorMessage struct {
 	Code    int64
@@ -13,4 +15,13 @@ type SuccessfulResponse struct {
 	Language           string
 	SubmittedText      string
 	TransliteratedText string
+}
+
+// UploadSuccess struct.
+type UploadSuccess struct {
+	Code         int64
+	Message      string
+	Language     string
+	OriginalFile *os.File
+	DownloadLink *os.File
 }

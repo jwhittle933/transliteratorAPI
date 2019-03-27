@@ -28,3 +28,9 @@ func ReadFile(file *multipart.FileHeader) (string, error) {
 
 	return contents, nil
 }
+
+// CreateFile consumes the contexts and writes to new file
+// for response
+// func CreateFile() (*File, error) {
+// 	newFile, err := os.Create("sendfile.txt")
+// }

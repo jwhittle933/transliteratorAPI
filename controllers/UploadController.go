@@ -15,8 +15,8 @@ import (
 // ProcessFile for reading uploaded file
 func ProcessFile(c echo.Context) error {
 	// TODO
-	// !! First, copy file to file system
-	// !! Then, use os package to read file
+	// // !! First, copy file to file system
+	// // !! Then, use os package to read file
 	// !! Then, parse contents
 	// !! Lastly, write new contents to file and return to client
 	file, err := c.FormFile("file")
