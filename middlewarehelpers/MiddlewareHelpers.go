@@ -2,6 +2,7 @@ package middlewarehelpers
 
 import (
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 // Authenticate middleware.
@@ -16,4 +17,11 @@ func Authenticate(next echo.HandlerFunc, e echo.Context) echo.HandlerFunc {
 		// For valid credentials call next
 		return next(c)
 	}
+}
+
+// Logger abstracts middleware logic.
+func Logger(e *echo.Echo) {
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
 }
