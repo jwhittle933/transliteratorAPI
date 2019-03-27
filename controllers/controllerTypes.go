@@ -26,5 +26,6 @@ type UploadSuccess struct {
 	Language           string
 	OriginalFile       *multipart.FileHeader
 	TransliteratedText string
+	BytesWritten       int
 	DownloadLink       string
 }

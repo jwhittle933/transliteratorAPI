@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"os"
 
 	engine "../engines"
 	"./uploader"
+	uuid "github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/thedevsaddam/govalidator"
 )
@@ -15,11 +18,6 @@ import (
 
 // ProcessFile for reading uploaded file
 func ProcessFile(c echo.Context) error {
-	// TODO
-	// // !! First, copy file to file system
-	// // !! Then, use os package to read file
-	// !! Then, parse contents
-	// !! Lastly, write new contents to file and return to client
 	file, err := c.FormFile("file")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, &ErrorMessage{
@@ -37,13 +35,16 @@ func ProcessFile(c echo.Context) error {
 	}
 
 	lang, transliteratedContents := engine.Transliterate(fileContents)
+	bytesWritten, pathToFile, err := CreateTempFile(bytes)
 
-	resp := &SuccessfulResponse{
+	resp := &UploadSuccess{
 		Code:               http.StatusOK,
 		Message:            "File Succesfully read.",
 		Language:           lang,
-		SubmittedText:      fileContents,
+		OriginalFile:       file,
 		TransliteratedText: transliteratedContents,
+		BytesWritten:       bytesWritten,
+		DownloadLink:       pathToFile,
 	}
 
 	return c.JSON(http.StatusOK, resp)
@@ -51,12 +52,35 @@ func ProcessFile(c echo.Context) error {
 
 // CreateTempFile consumes the contents and writes to new file
 // for response
-func CreateTempFile(byteSlice []byte) {
-	newFile, err := os.Create("./tmp/resp.txt")
-	err = os.Chmod("./tmp/resp.txt", 0777)
-	openFile, err := os.Open("./tmp/resp.txt")
+func CreateTempFile(byteSlice []byte) (int, string, error) {
+	uuid := uuid.New()
+	pathToFile := fmt.Sprintf("./tmp/resp-%d.txt", uuid)
+
+	newFile, err := os.Create(pathToFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer newFile.Close()
+
+	openFile, err := os.OpenFile(pathToFile, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer openFile.Close()
+
 	write, err := openFile.Write(byteSlice)
-	err = os.Remove("./tmp/resp.txt")
+
+	return write, pathToFile, err
+}
+
+// DestroyFile for deletion of tempfile
+func DestroyFile(fileLoc string) error {
+	err := os.Remove("./tmp/resp.txt")
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
 }
 
 // ValidateFile func
