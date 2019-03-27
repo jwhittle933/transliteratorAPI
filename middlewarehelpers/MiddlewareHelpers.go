@@ -20,8 +20,11 @@ func Authenticate(next echo.HandlerFunc, e echo.Context) echo.HandlerFunc {
 }
 
 // Logger abstracts middleware logic.
-func Logger(e *echo.Echo) {
+func Logger(e *echo.Echo) middleware.LoggerConfig {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
+	return middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}
 }
