@@ -1,6 +1,8 @@
 package controllers
 
-import "os"
+import (
+	"mime/multipart"
+)
 
 // ErrorMessage for forming error repsonses
 type ErrorMessage struct {
@@ -19,9 +21,10 @@ type SuccessfulResponse struct {
 
 // UploadSuccess struct.
 type UploadSuccess struct {
-	Code         int64
-	Message      string
-	Language     string
-	OriginalFile *os.File
-	DownloadLink *os.File
+	Code               int64
+	Message            string
+	Language           string
+	OriginalFile       *multipart.FileHeader
+	TransliteratedText string
+	DownloadLink       string
 }

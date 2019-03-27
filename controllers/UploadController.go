@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	engine "../engines"
 	"./uploader"
@@ -27,7 +28,7 @@ func ProcessFile(c echo.Context) error {
 		})
 	}
 
-	fileContents, err := uploader.ReadFile(file)
+	fileContents, bytes, err := uploader.ReadFile(file)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, &ErrorMessage{
 			Code:    http.StatusBadRequest,
@@ -46,6 +47,16 @@ func ProcessFile(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, resp)
+}
+
+// CreateTempFile consumes the contents and writes to new file
+// for response
+func CreateTempFile(byteSlice []byte) {
+	newFile, err := os.Create("./tmp/resp.txt")
+	err = os.Chmod("./tmp/resp.txt", 0777)
+	openFile, err := os.Open("./tmp/resp.txt")
+	write, err := openFile.Write(byteSlice)
+	err = os.Remove("./tmp/resp.txt")
 }
 
 // ValidateFile func
