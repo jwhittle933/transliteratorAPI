@@ -5,10 +5,14 @@ A replacement for previous version
 ## File Tree
 
 ```bash
+.
 ├── README.md
 ├── controllers
 │   ├── TransliterateController.go
-│   └── UploadController.go
+│   ├── UploadController.go
+│   ├── controllerTypes.go
+│   └── uploader
+│       └── uploader.go
 ├── engines
 │   └── engine.go
 ├── init
@@ -16,8 +20,9 @@ A replacement for previous version
 ├── middlewarehelpers
 │   └── MiddlewareHelpers.go
 ├── scripts
-│   ├── basicSetup.sh
-│   └── setup.sh
+│   ├── govars.sh
+│   └── govarsBasic.sh
+├── test.txt
 └── transliterate.go
 ```
 
