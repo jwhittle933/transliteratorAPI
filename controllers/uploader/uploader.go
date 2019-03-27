@@ -25,7 +25,6 @@ func ReadFile(file *multipart.FileHeader) (string, error) {
 		return "There was an error.", err
 	}
 	contents := string(src)
-	// fmt.Printf("File data: %s\n: ", src)
 
 	return contents, nil
 }
