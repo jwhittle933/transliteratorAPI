@@ -18,12 +18,6 @@ var middlewareConfig = middleware.LoggerConfig{
 	Format: "method=${method}, uri=${uri}, status=${status}\n",
 }
 
-// Resp struct for response schema.
-type Resp struct {
-	Code    int64
-	Message string
-}
-
 func main() {
 	e := start.Init()
 	e.Use(middleware.LoggerWithConfig(middlewareConfig))
@@ -40,13 +34,7 @@ func main() {
 	e.GET("/", baseRouteHandler)
 	e.GET("/transliterate", controllers.Transliterator)
 	e.POST("/upload", controllers.ProcessFile)
-	e.GET("/upload", func(c echo.Context) error {
-		resp := &Resp{
-			Code:    200,
-			Message: "Upload a file",
-		}
-		return c.JSON(http.StatusOK, resp)
-	})
+	e.GET("/upload", uploadRouteHandler)
 	e.Static("/files", "tmp")
 
 	auth := e.Group("/auth")
@@ -67,9 +55,17 @@ func initDb() (*sql.DB, error) {
 }
 
 func baseRouteHandler(c echo.Context) error {
-	resp := &Resp{
+	resp := &controllers.Resp{
 		Code:    200,
 		Message: "Transliterator API",
+	}
+	return c.JSON(http.StatusOK, resp)
+}
+
+func uploadRouteHandler(c echo.Context) error {
+	resp := &controllers.Resp{
+		Code:    200,
+		Message: "Upload a file",
 	}
 	return c.JSON(http.StatusOK, resp)
 }
