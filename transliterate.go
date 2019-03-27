@@ -45,6 +45,7 @@ func main() {
 		}
 		return c.JSON(http.StatusOK, resp)
 	})
+	e.Static("/files", "tmp")
 
 	e.GET("/users/:id", getUser)
 

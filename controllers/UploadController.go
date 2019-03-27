@@ -50,8 +50,7 @@ func ProcessFile(c echo.Context) error {
 	return c.JSON(http.StatusOK, resp)
 }
 
-// CreateTempFile consumes the contents and writes to new file
-// for response
+// CreateTempFile consumes the contents and writes to new file for response
 func CreateTempFile(byteSlice []byte) (int, string, error) {
 	uuid := uuid.New()
 	pathToFile := fmt.Sprintf("./tmp/resp-%d.txt", uuid)
@@ -75,7 +74,7 @@ func CreateTempFile(byteSlice []byte) (int, string, error) {
 
 // DestroyFile for deletion of tempfile
 func DestroyFile(fileLoc string) error {
-	err := os.Remove("./tmp/resp.txt")
+	err := os.Remove(fileLoc)
 	if err != nil {
 		log.Fatal(err)
 		return err
