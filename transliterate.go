@@ -12,8 +12,6 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-// https://github.com/golang/go/wiki/CodeReviewComments
-
 var middlewareConfig = middleware.LoggerConfig{
 	Format: "method=${method}, uri=${uri}, status=${status}\n",
 }
@@ -33,9 +31,9 @@ func main() {
 
 	e.GET("/", baseRouteHandler)
 	e.GET("/transliterate", controllers.Transliterator)
-	e.POST("/upload", controllers.ProcessFile)
+	e.POST("/upload", controllers.Uploader)
 	e.GET("/upload", uploadRouteHandler)
-	e.Static("/files", "tmp")
+	e.Static("/tmp", "tmp")
 
 	auth := e.Group("/auth")
 	auth.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
