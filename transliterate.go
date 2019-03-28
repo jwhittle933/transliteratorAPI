@@ -43,7 +43,7 @@ func main() {
 		return false, nil
 	}))
 
-	e.Logger.Fatal(e.Start(":3000"))\
+	e.Logger.Fatal(e.Start(":3000"))
 }
 
 func initDb() (*sql.DB, error) {
