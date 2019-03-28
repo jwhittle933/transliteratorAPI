@@ -26,7 +26,7 @@ func ProcessFile(c echo.Context) error {
 		})
 	}
 
-	fileContents, bytes, err := uploader.ReadFile(file)
+	fileContents, err := uploader.ReadFile(file)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, &ErrorMessage{
 			Code:    http.StatusBadRequest,
@@ -35,7 +35,7 @@ func ProcessFile(c echo.Context) error {
 	}
 
 	lang, transliteratedContents := engine.Transliterate(fileContents)
-	bytesWritten, pathToFile, err := CreateTempFile(bytes)
+	bytesWritten, pathToFile, err := CreateTempFile([]byte(transliteratedContents))
 
 	resp := &UploadSuccess{
 		Code:               http.StatusOK,
