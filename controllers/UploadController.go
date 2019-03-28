@@ -21,7 +21,7 @@ func Uploader(c echo.Context) error {
 		})
 	}
 
-	// fileContents of type string
+	// mime of type string, fileContents of type string
 	mime, fileContents, err := uploader.ReadFile(file)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, &ErrorMessage{
