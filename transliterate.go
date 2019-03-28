@@ -33,7 +33,7 @@ func main() {
 
 	e.GET("/", baseRouteHandler)
 	e.GET("/transliterate", controllers.Transliterator)
-	e.POST("/upload", controllers.ProcessFile)
+	e.POST("/upload", controllers.Uploader)
 	e.GET("/upload", uploadRouteHandler)
 	e.Static("/files", "tmp")
 
