@@ -44,6 +44,7 @@ func main() {
 	}))
 
 	e.Logger.Fatal(e.Start(":3000"))
+	// log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func initDb() (*sql.DB, error) {
