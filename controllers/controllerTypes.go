@@ -1,8 +1,6 @@
 package controllers
 
-import (
-	"mime/multipart"
-)
+import "os"
 
 // Resp struct for response schema.
 type Resp struct {
@@ -30,7 +28,7 @@ type UploadSuccess struct {
 	Code               int64
 	Message            string
 	Language           string
-	OriginalFile       *multipart.FileHeader
+	OriginalFile       *os.File
 	TransliteratedText string
 	BytesWritten       int
 	DownloadLink       string

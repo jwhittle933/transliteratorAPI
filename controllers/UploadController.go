@@ -10,6 +10,11 @@ import (
 
 // https://www.devdungeon.com/content/working-files-go#everything_is_a_file
 
+// UploadHandler experimental http handler
+func UploadHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
 // Uploader for reading uploaded file
 func Uploader(c echo.Context) error {
 	file, err := c.FormFile("file")
@@ -19,6 +24,8 @@ func Uploader(c echo.Context) error {
 			Message: "There was an error receiving the file.",
 		})
 	}
+
+	// openedFile, err := file.Open()
 
 	fileContents, err := uploader.ReadFile(file)
 	if err != nil {
