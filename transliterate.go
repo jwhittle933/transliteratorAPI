@@ -32,7 +32,6 @@ func main() {
 	e.GET("/", baseRouteHandler)
 	e.GET("/transliterate", controllers.Transliterator)
 	e.POST("/upload", controllers.Uploader)
-	http.HandleFunc("upload", controllers.UploadHandler)
 	e.GET("/upload", uploadRouteHandler)
 	e.Static("/tmp", "tmp")
 
@@ -44,8 +43,7 @@ func main() {
 		return false, nil
 	}))
 
-	e.Logger.Fatal(e.Start(":3000"))
-	// log.Fatal(http.ListenAndServe(":8080", nil))
+	e.Logger.Fatal(e.Start(":3000"))\
 }
 
 func initDb() (*sql.DB, error) {
