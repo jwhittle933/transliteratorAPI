@@ -10,13 +10,9 @@ import (
 
 // https://www.devdungeon.com/content/working-files-go#everything_is_a_file
 
-// UploadHandler experimental func
-func UploadHandler(w http.ResponseWriter, r *http.Request) {
-	return
-}
-
 // Uploader for reading uploaded file
 func Uploader(c echo.Context) error {
+	// file of type multitpart.FileHeader
 	file, err := c.FormFile("file")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, &ErrorMessage{
@@ -25,9 +21,8 @@ func Uploader(c echo.Context) error {
 		})
 	}
 
-	// openedFile, err := file.Open()
-
-	fileContents, err := uploader.ReadFile(file)
+	// fileContents of type string
+	mime, fileContents, err := uploader.ReadFile(file)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, &ErrorMessage{
 			Code:    http.StatusBadRequest,
@@ -35,7 +30,10 @@ func Uploader(c echo.Context) error {
 		})
 	}
 
+	// lang of type string, transliteratedContents of type string
 	lang, transliteratedContents := engine.Transliterate(fileContents)
+
+	// f of type os.File, bytesWritten of type int, pathToFile of type string
 	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(transliteratedContents))
 
 	resp := &UploadSuccess{
@@ -43,6 +41,7 @@ func Uploader(c echo.Context) error {
 		Message:            "File Succesfully read.",
 		Language:           lang,
 		OriginalFile:       f,
+		FileType:           mime,
 		TransliteratedText: transliteratedContents,
 		BytesWritten:       bytesWritten,
 		DownloadLink:       "http://localhost:3000" + pathToFile,
