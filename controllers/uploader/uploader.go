@@ -39,7 +39,7 @@ func ReadFile(file *multipart.FileHeader) (string, error) {
 // CreateTempFile consumes the contents and writes to new file for response
 func CreateTempFile(byteSlice []byte) (int, string, error) {
 	uuid := uuid.New()
-	pathToFile := fmt.Sprintf("./tmp/resp-%d.txt", uuid)
+	pathToFile := fmt.Sprintf("/tmp/resp-%d.txt", uuid)
 
 	newFile, err := os.Create(pathToFile)
 	if err != nil {
@@ -71,11 +71,11 @@ func DestroyFile(fileLoc string) error {
 // ValidateFile func
 func ValidateFile(w http.ResponseWriter, r *http.Request) {
 	rules := govalidator.MapData{
-		"file:text": []string{"ext:txt, docx, csv", "size:100000", "mime:txt, docx, csv", "required"},
+		"file:text": []string{"ext:txt, docx, pdf", "size:100000", "mime:txt, docx, pdf", "required"},
 	}
 
 	messages := govalidator.MapData{
-		"file:text": []string{"ext:Only txt/docx/csv allowed", "required:document is required"},
+		"file:text": []string{"ext:Only txt/docx/pdf allowed", "required:document is required"},
 	}
 
 	opts := govalidator.Options{

@@ -38,7 +38,7 @@ func Uploader(c echo.Context) error {
 		OriginalFile:       file,
 		TransliteratedText: transliteratedContents,
 		BytesWritten:       bytesWritten,
-		DownloadLink:       pathToFile,
+		DownloadLink:       "http://localhost:3000" + pathToFile,
 	}
 
 	return c.JSON(http.StatusOK, resp)
