@@ -29,6 +29,7 @@ type UploadSuccess struct {
 	Message            string
 	Language           string
 	OriginalFile       *os.File
+	FileType           string
 	TransliteratedText string
 	BytesWritten       int
 	DownloadLink       string
