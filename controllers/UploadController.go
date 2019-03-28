@@ -10,9 +10,9 @@ import (
 
 // https://www.devdungeon.com/content/working-files-go#everything_is_a_file
 
-// UploadHandler experimental http handler
+// UploadHandler experimental func
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
-
+	return
 }
 
 // Uploader for reading uploaded file
