@@ -4,6 +4,12 @@ import (
 	"mime/multipart"
 )
 
+// Resp struct for response schema.
+type Resp struct {
+	Code    int64
+	Message string
+}
+
 // ErrorMessage for forming error repsonses
 type ErrorMessage struct {
 	Code    int64

@@ -7,7 +7,7 @@ import (
 )
 
 // ReadFile consumes *multipart.FileHeader and returns string, error
-func ReadFile(file *multipart.FileHeader) (string, []byte, error) {
+func ReadFile(file *multipart.FileHeader) (string, error) {
 
 	fileName := file.Filename
 	fmt.Println("Reading file: ", fileName)
@@ -17,14 +17,14 @@ func ReadFile(file *multipart.FileHeader) (string, []byte, error) {
 
 	data, err := file.Open()
 	if err != nil {
-		return "There was an error.", []byte{}, err
+		return "There was an error.", err
 	}
 
 	src, err := ioutil.ReadAll(data)
 	if err != nil {
-		return "There was an error.", []byte{}, err
+		return "There was an error.", err
 	}
 	contents := string(src)
 
-	return contents, src, nil
+	return contents, nil
 }
