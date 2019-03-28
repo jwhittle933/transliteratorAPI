@@ -36,8 +36,36 @@ func ReadFile(file *multipart.FileHeader) (string, error) {
 	return contents, nil
 }
 
+// FileType func to determine mime
+func FileType(path string) (string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return "There was an error opening the file in uploader.FileType", err
+	}
+	defer file.Close()
+
+	contentType, err := GetMimeType(file)
+	if err != nil {
+		return "There was an error calling GetMimeType in uploader.FileType.", err
+	}
+	return contentType, nil
+}
+
+// GetMimeType returns mime of file
+func GetMimeType(f *os.File) (string, error) {
+	buffer := make([]byte, 512)
+
+	_, err := f.Read(buffer)
+	if err != nil {
+		return "There was an error reading the file in uploader.GetMimeType.", nil
+	}
+
+	contentType := http.DetectContentType(buffer)
+	return contentType, nil
+}
+
 // CreateTempFile consumes the contents and writes to new file for response
-func CreateTempFile(byteSlice []byte) (int, string, error) {
+func CreateTempFile(byteSlice []byte) (*os.File, int, string, error) {
 	uuid := uuid.New()
 	pathToFile := fmt.Sprintf("/tmp/resp-%d.txt", uuid)
 
@@ -55,7 +83,7 @@ func CreateTempFile(byteSlice []byte) (int, string, error) {
 
 	write, err := openFile.Write(byteSlice)
 
-	return write, pathToFile, err
+	return newFile, write, pathToFile, err
 }
 
 // DestroyFile for deletion of tempfile on download request

@@ -29,13 +29,13 @@ func Uploader(c echo.Context) error {
 	}
 
 	lang, transliteratedContents := engine.Transliterate(fileContents)
-	bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(transliteratedContents))
+	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(transliteratedContents))
 
 	resp := &UploadSuccess{
 		Code:               http.StatusOK,
 		Message:            "File Succesfully read.",
 		Language:           lang,
-		OriginalFile:       file,
+		OriginalFile:       f,
 		TransliteratedText: transliteratedContents,
 		BytesWritten:       bytesWritten,
 		DownloadLink:       "http://localhost:3000" + pathToFile,
