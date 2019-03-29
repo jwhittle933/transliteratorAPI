@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	pdfreader "../PdfReader"
 	engine "../engines"
+	pdfreader "../pdfreader"
 	"./uploader"
 	"github.com/labstack/echo"
 )
