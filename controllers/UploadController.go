@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	pdfreader "../PdfReader"
 	engine "../engines"
 	"./uploader"
 	"github.com/labstack/echo"
@@ -15,6 +16,8 @@ func Uploader(c echo.Context) error {
 	// file of type multitpart.FileHeader
 	file, err := c.FormFile("file")
 	errCheck(c, err)
+
+	multiFile, err := pdfreader.PdfReader(file)
 
 	// mime of type string, fileContents of type string
 	mime, fileContents, err := uploader.ReadFile(file)
