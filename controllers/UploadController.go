@@ -14,29 +14,20 @@ import (
 func Uploader(c echo.Context) error {
 	// file of type multitpart.FileHeader
 	file, err := c.FormFile("file")
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, &ErrorMessage{
-			Code:    http.StatusBadRequest,
-			Message: "There was an error receiving the file.",
-		})
-	}
+	errCheck(c, err)
 
 	// mime of type string, fileContents of type string
 	mime, fileContents, err := uploader.ReadFile(file)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, &ErrorMessage{
-			Code:    http.StatusBadRequest,
-			Message: "There was an error receiving the file.",
-		})
-	}
+	errCheck(c, err)
 
 	// lang of type string, transliteratedContents of type string
 	lang, transliteratedContents := engine.Transliterate(fileContents)
 
 	// f of type os.File, bytesWritten of type int, pathToFile of type string
 	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(transliteratedContents))
+	errCheck(c, err)
 
-	resp := &UploadSuccess{
+	return c.JSON(http.StatusOK, &UploadSuccess{
 		Code:               http.StatusOK,
 		Message:            "File Succesfully read.",
 		Language:           lang,
@@ -45,7 +36,15 @@ func Uploader(c echo.Context) error {
 		TransliteratedText: transliteratedContents,
 		BytesWritten:       bytesWritten,
 		DownloadLink:       "http://localhost:3000" + pathToFile,
-	}
+	})
+}
 
-	return c.JSON(http.StatusOK, resp)
+func errCheck(c echo.Context, err error) error {
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
+			Code:    http.StatusBadRequest,
+			Message: "There was an error.",
+		})
+	}
+	return nil
 }

@@ -46,7 +46,7 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 */
 func CreateTempFile(byteSlice []byte) (*os.File, int, string, error) {
 	uuid := uuid.New()
-	pathToFile := fmt.Sprintf("/tmp/resp-%d.txt", uuid)
+	pathToFile := fmt.Sprintf("./tmp/resp-%d.txt", uuid)
 
 	newFile, err := os.Create(pathToFile)
 	if err != nil {
