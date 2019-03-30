@@ -24,8 +24,12 @@ func Uploader(c echo.Context) error {
 
 	if mime == "application/pdf" {
 		// pdfreader.PdfReader from package pdfreader >> Experimental
-		fileBytes, _ := pdfreader.PdfReader(file)
-		fmt.Println("BYTES FROM PDF READER", fileBytes)
+		pdfFileBytes, _ := pdfreader.PdfReader(file)
+		fmt.Println("BYTES FROM PDF READER", pdfFileBytes)
+	}
+
+	if mime == "application/zip" {
+		//
 	}
 
 	// lang of type string, transliteratedContents of type string
