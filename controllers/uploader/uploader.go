@@ -38,38 +38,15 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 	return mimeType, contents, nil
 }
 
-// FileType func to determine mime
-func FileType(path string) (string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return "There was an error opening the file in uploader.FileType", err
-	}
-	defer file.Close()
-
-	contentType, err := GetMimeType(file)
-	if err != nil {
-		return "There was an error calling GetMimeType in uploader.FileType.", err
-	}
-	return contentType, nil
-}
-
-// GetMimeType returns mime of file
-func GetMimeType(f *os.File) (string, error) {
-	buffer := make([]byte, 512)
-
-	_, err := f.Read(buffer)
-	if err != nil {
-		return "There was an error reading the file in uploader.GetMimeType.", nil
-	}
-
-	contentType := http.DetectContentType(buffer)
-	return contentType, nil
-}
-
 // CreateTempFile consumes the contents and writes to new file for response
+/*
+	TODO this method may or may not be implemented
+	!! This may be a feature update in the case that the application has
+	!! users who can submit documents and save them for later download
+*/
 func CreateTempFile(byteSlice []byte) (*os.File, int, string, error) {
 	uuid := uuid.New()
-	pathToFile := fmt.Sprintf("/tmp/resp-%d.txt", uuid)
+	pathToFile := fmt.Sprintf("./tmp/resp-%d.txt", uuid)
 
 	newFile, err := os.Create(pathToFile)
 	if err != nil {
