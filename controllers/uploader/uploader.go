@@ -16,11 +16,8 @@ import (
 // ReadFile consumes *multipart.FileHeader and returns string, error
 func ReadFile(file *multipart.FileHeader) (string, string, error) {
 
-	fileName := file.Filename
-	fmt.Println("Reading file: ", fileName)
-
-	fileSize := file.Size
-	fmt.Println("File size: ", fileSize)
+	fmt.Println("Reading file: ", file.Filename)
+	fmt.Println("File size: ", file.Size)
 
 	data, err := file.Open()
 	if err != nil {
