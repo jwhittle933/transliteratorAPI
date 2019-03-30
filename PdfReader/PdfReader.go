@@ -4,7 +4,7 @@ import (
 	"mime/multipart"
 )
 
-//PdfReader main func for reading pdf
+//PdfReader main func for reading pdfs
 func PdfReader(f *multipart.FileHeader) ([]byte, error) {
 	file, err := f.Open()
 
