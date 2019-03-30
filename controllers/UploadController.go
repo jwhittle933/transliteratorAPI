@@ -21,8 +21,9 @@ func Uploader(c echo.Context) error {
 	// mime of type string, fileContents of type string
 	mime, fileContents, err := uploader.ReadFile(file)
 	errCheck(c, err)
+
 	// f of type os.File, bytesWritten of type int, pathToFile of type string
-	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(fileContents))
+	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(fileContents), "txt")
 
 	if mime == "application/pdf" {
 		// pdfreader.PdfReader from package pdfreader >> Experimental

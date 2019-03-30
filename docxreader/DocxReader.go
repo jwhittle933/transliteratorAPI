@@ -2,10 +2,23 @@ package docxreader
 
 import (
 	"archive/zip"
+	"encoding/xml"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 )
+
+// Body struct
+type Body struct {
+	Paragraph []string `xml:"p>r>t"`
+}
+
+// Document struct
+type Document struct {
+	XMLName xml.Name `xml:"document"`
+	Body    Body     `xml:"body"`
+}
 
 // NOTES :
 // Office Docs (docx, xlsx, *x) are just zip files with xml.
@@ -33,6 +46,7 @@ func Unzip(pathToFile, saveLocation string) error {
 			continue
 		}
 
+		fmt.Println("Opening ", file)
 		fileReader, err := file.Open()
 		if err != nil {
 			return err

@@ -9,15 +9,16 @@ import (
 	"net/http"
 	"os"
 
+	"../../docxreader"
+	"../../pdfreader"
 	"github.com/google/uuid"
 	"github.com/thedevsaddam/govalidator"
 )
 
 // ReadFile consumes *multipart.FileHeader and returns string, error
 func ReadFile(file *multipart.FileHeader) (string, string, error) {
-
-	fmt.Println("Reading file: ", file.Filename)
-	fmt.Println("File size: ", file.Size)
+	fmt.Println("Reading file (from ReadFile): ", file.Filename)
+	fmt.Println("File size (from ReadFile): ", file.Size)
 
 	data, err := file.Open()
 	if err != nil {
@@ -32,6 +33,23 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 	mimeType := http.DetectContentType(src)
 	contents := string(src)
 
+	if mimeType == "application/pdf" {
+		// pdfreader.PdfReader from package pdfreader >> Experimental
+		pdfFileBytes, _ := pdfreader.PdfReader(file)
+		fmt.Println("PDF Detected. BYTE READER: ", pdfFileBytes)
+	}
+
+	if mimeType == "application/zip" {
+		_, _, pathToFile, err := CreateTempFile(src, "docx")
+		fmt.Println("PATH TO FILE: ", pathToFile)
+		if err != nil {
+			panic(err)
+		}
+		if err := docxreader.Unzip(pathToFile, "./testfiles/test/"); err != nil {
+			fmt.Println(err)
+		}
+	}
+
 	return mimeType, contents, nil
 }
 
@@ -41,9 +59,9 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 	!! This may be a feature update in the case that the application has
 	!! users who can submit documents and save them for later download
 */
-func CreateTempFile(byteSlice []byte) (*os.File, int, string, error) {
+func CreateTempFile(byteSlice []byte, mime string) (*os.File, int, string, error) {
 	uuid := uuid.New()
-	pathToFile := fmt.Sprintf("./tmp/resp-%d.txt", uuid)
+	pathToFile := fmt.Sprintf("./tmp/file-%d.%s", uuid, mime)
 
 	newFile, err := os.Create(pathToFile)
 	if err != nil {
