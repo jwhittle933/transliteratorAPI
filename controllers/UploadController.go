@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	engine "../engines"
@@ -17,7 +18,9 @@ func Uploader(c echo.Context) error {
 	file, err := c.FormFile("file")
 	errCheck(c, err)
 
-	multiFile, err := pdfreader.PdfReader(file)
+	// pdfreader.PdfReader from package pdfreader >> Experimental
+	fileBytes, err := pdfreader.PdfReader(file)
+	fmt.Println("BYTES FROM PDF READER", fileBytes)
 
 	// mime of type string, fileContents of type string
 	mime, fileContents, err := uploader.ReadFile(file)

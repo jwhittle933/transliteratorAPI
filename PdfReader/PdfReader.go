@@ -1,7 +1,6 @@
 package pdfreader
 
 import (
-	"fmt"
 	"mime/multipart"
 )
 
@@ -17,7 +16,6 @@ func PdfReader(f *multipart.FileHeader) ([]byte, error) {
 
 	buffer := make([]byte, 9999)
 	file.Read(buffer)
-	fmt.Println(string(buffer))
 
 	return buffer, nil
 }
