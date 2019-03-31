@@ -18,19 +18,26 @@ func Uploader(c echo.Context) error {
 	file, err := c.FormFile("file")
 	errCheck(c, err)
 
-	// pdfreader.PdfReader from package pdfreader >> Experimental
-	fileBytes, err := pdfreader.PdfReader(file)
-	fmt.Println("BYTES FROM PDF READER", fileBytes)
-
 	// mime of type string, fileContents of type string
 	mime, fileContents, err := uploader.ReadFile(file)
 	errCheck(c, err)
 
+	// f of type os.File, bytesWritten of type int, pathToFile of type string
+	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(fileContents), "txt")
+
+	if mime == "application/pdf" {
+		// pdfreader.PdfReader from package pdfreader >> Experimental
+		pdfFileBytes, _ := pdfreader.PdfReader(file)
+		fmt.Println("BYTES FROM PDF READER", pdfFileBytes)
+	}
+
+	if mime == "application/zip" {
+		//
+	}
+
 	// lang of type string, transliteratedContents of type string
 	lang, transliteratedContents := engine.Transliterate(fileContents)
 
-	// f of type os.File, bytesWritten of type int, pathToFile of type string
-	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(transliteratedContents))
 	errCheck(c, err)
 
 	return c.JSON(http.StatusOK, &UploadSuccess{
