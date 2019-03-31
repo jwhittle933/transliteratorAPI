@@ -3,7 +3,6 @@ package docxreader
 import (
 	"archive/zip"
 	"encoding/xml"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -50,7 +49,6 @@ func Unzip(pathToFile, saveLocation string) error {
 		os.MkdirAll(dirPath, 0777)
 		_, err := os.Create(path)
 
-		fmt.Println("Opening ", file)
 		fileReader, err := file.Open()
 		if err != nil {
 			return err
