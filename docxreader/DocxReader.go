@@ -41,10 +41,12 @@ func Unzip(pathToFile, saveLocation string) error {
 
 	for _, file := range reader.File {
 		path := filepath.Join(saveLocation, file.Name)
-		if file.FileInfo().IsDir() {
-			os.MkdirAll(path, file.Mode())
-			continue
-		}
+
+		// file.FileInfo().IsDir() returns false in every case
+		fmt.Println(file.FileInfo().IsDir())
+
+		// os.MkdirAll(path, file.Mode())
+		_, err := os.Create(path)
 
 		fmt.Println("Opening ", file)
 		fileReader, err := file.Open()
@@ -58,7 +60,7 @@ func Unzip(pathToFile, saveLocation string) error {
 			return err
 		}
 
-		defer targetFile.Close()
+		// defer targetFile.Close()
 
 		if _, err := io.Copy(targetFile, fileReader); err != nil {
 			return err

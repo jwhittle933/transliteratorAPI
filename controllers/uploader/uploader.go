@@ -45,7 +45,7 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 		if err != nil {
 			panic(err)
 		}
-		if err := docxreader.Unzip(pathToFile, "./testfiles/test/"); err != nil {
+		if err := docxreader.Unzip(pathToFile, "./testfiles/test"); err != nil {
 			fmt.Println(err)
 		}
 	}
