@@ -48,7 +48,7 @@ func Unzip(pathToFile, saveLocation string) error {
 		fmt.Println("FileInfo(): ", file.FileInfo())
 
 		dirPath := filepath.Dir(path)
-		os.MkdirAll(dirPath, file.Mode())
+		os.MkdirAll(dirPath, 0777)
 		_, err := os.Create(path)
 
 		fmt.Println("Opening ", file)
