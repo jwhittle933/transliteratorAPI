@@ -45,7 +45,6 @@ func Unzip(pathToFile, saveLocation string) error {
 		/* file.FileInfo().IsDir() returns false in every case
 		file.FileInfo() returns os.FileInfo
 		*/
-		fmt.Println("FileInfo(): ", file.FileInfo())
 
 		dirPath := filepath.Dir(path)
 		os.MkdirAll(dirPath, 0777)
