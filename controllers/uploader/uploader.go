@@ -41,7 +41,6 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 
 	if mimeType == "application/zip" {
 		_, _, pathToFile, err := CreateTempFile(src, "docx")
-		fmt.Println("PATH TO FILE: ", pathToFile)
 		if err != nil {
 			panic(err)
 		}
@@ -54,11 +53,6 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 }
 
 // CreateTempFile consumes the contents and writes to new file for response
-/*
-	TODO this method may or may not be implemented
-	!! This may be a feature update in the case that the application has
-	!! users who can submit documents and save them for later download
-*/
 func CreateTempFile(byteSlice []byte, mime string) (*os.File, int, string, error) {
 	uuid := uuid.New()
 	pathToFile := fmt.Sprintf("./tmp/file-%d.%s", uuid, mime)
