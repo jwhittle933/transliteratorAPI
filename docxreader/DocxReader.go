@@ -29,14 +29,14 @@ func DocxUnzip(pathToFile, saveLocation string) error {
 		return err
 	}
 
-	zipFiles := ExposeFiles(reader)
+	zipFiles := ExtractFiles(reader)
 	fmt.Println(zipFiles)
 
 	return nil
 }
 
-// ExposeFiles returns []*zip.File.
-func ExposeFiles(z *zip.ReadCloser) *ZipFiles {
+// ExtractFiles returns []*zip.File.
+func ExtractFiles(z *zip.ReadCloser) *ZipFiles {
 	return &ZipFiles{
 		Files: z.File,
 	}
@@ -45,10 +45,57 @@ func ExposeFiles(z *zip.ReadCloser) *ZipFiles {
 // MapFiles for iterating through zip.File slice
 // and performing an operation on it.
 // TODO: method should accect a func param to perform on each file or perhaps more than one func
-func (f *ZipFiles) MapFiles() error {
+func (f *ZipFiles) MapFiles(saveLocation string, fn func(fi *zip.File) error) error {
 	for _, file := range f.Files {
-		fmt.Println(file)
+		path := filepath.Join(saveLocation, file.Name)
+		dirPath := filepath.Dir(path)
+		os.MkdirAll(dirPath, 0777)
+		_, err := os.Create(path)
+		if err != nil {
+			return err
+		}
+
+		fn(file)
+
+		fileReader, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer fileReader.Close()
+
+		targetFile, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC, file.Mode())
+		if err != nil {
+			return err
+		}
+
+		defer targetFile.Close()
+
+		if _, err := io.Copy(targetFile, fileReader); err != nil {
+			return err
+		}
 	}
+	return nil
+}
+
+// CopyToOS for mapping over files.
+func CopyToOS(file *zip.File, filePath string) error {
+	fileReader, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer fileReader.Close()
+
+	targetFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_TRUNC, file.Mode())
+	if err != nil {
+		return err
+	}
+
+	defer targetFile.Close()
+
+	if _, err := io.Copy(targetFile, fileReader); err != nil {
+		return err
+	}
+
 	return nil
 }
 
