@@ -11,6 +11,7 @@ import (
 /*
  TODO: Accept []byte of read contents of submitted docx
  TODO: Use read data to create unzip, rather than creating tmp file
+ TODO: Write data to disc or keep in memory?
 */
 func DocxUnzip(pathToFile, saveLocation string) error {
 	reader, err := zip.OpenReader(pathToFile)
@@ -22,15 +23,15 @@ func DocxUnzip(pathToFile, saveLocation string) error {
 		return err
 	}
 
-	ExpandDocx(reader) // << will be changed
+	// ExpandDocx(reader) << will be changed
 
 	return nil
 }
 
 // ExpandDocx method
-func ExpandDocx(z *zip.ReadCloser) {
-	return
-}
+// func ExpandDocx(z *zip.ReadCloser) zip.File {
+
+// }
 
 // Unzip for exposing contexts of zip.
 // TODO: Modularize
@@ -72,4 +73,9 @@ func Unzip(pathToFile, saveLocation string) error {
 	}
 
 	return nil
+}
+
+// XMLManip for manipulating xml
+func XMLManip() {
+	return
 }
