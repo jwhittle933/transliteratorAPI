@@ -2,10 +2,16 @@ package docxreader
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 )
+
+// ZipFiles struct for handling extention methods on unziped files.
+type ZipFiles struct {
+	Files []*zip.File
+}
 
 // DocxUnzip for reading Word .docx files.
 /*
@@ -23,15 +29,28 @@ func DocxUnzip(pathToFile, saveLocation string) error {
 		return err
 	}
 
-	// ExpandDocx(reader) << will be changed
+	zipFiles := ExposeFiles(reader)
+	fmt.Println(zipFiles)
 
 	return nil
 }
 
-// ExpandDocx method
-// func ExpandDocx(z *zip.ReadCloser) zip.File {
+// ExposeFiles returns []*zip.File.
+func ExposeFiles(z *zip.ReadCloser) *ZipFiles {
+	return &ZipFiles{
+		Files: z.File,
+	}
+}
 
-// }
+// MapFiles for iterating through zip.File slice
+// and performing an operation on it.
+// TODO: method should accect a func param to perform on each file or perhaps more than one func
+func (f *ZipFiles) MapFiles() error {
+	for _, file := range f.Files {
+		fmt.Println(file)
+	}
+	return nil
+}
 
 // Unzip for exposing contexts of zip.
 // TODO: Modularize
