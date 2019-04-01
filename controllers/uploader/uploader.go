@@ -44,7 +44,8 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 		if err != nil {
 			panic(err)
 		}
-		if err := docxreader.Unzip(pathToFile, "./testfiles/unzip"); err != nil {
+		saveLocation := fmt.Sprintf("./dir-%d/unzip", uuid.New())
+		if err := docxreader.Unzip(pathToFile, saveLocation); err != nil {
 			fmt.Println(err)
 		}
 	}

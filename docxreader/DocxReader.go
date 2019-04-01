@@ -8,6 +8,10 @@ import (
 )
 
 // DocxUnzip for reading Word .docx files.
+/*
+ TODO: Accept []byte of read contents of submitted docx
+ TODO: Use read data to create unzip, rather than creating tmp file
+*/
 func DocxUnzip(pathToFile, saveLocation string) error {
 	reader, err := zip.OpenReader(pathToFile)
 	if err != nil {
@@ -18,14 +22,18 @@ func DocxUnzip(pathToFile, saveLocation string) error {
 		return err
 	}
 
+	ExpandDocx(reader) // << will be changed
+
 	return nil
 }
 
-func (z *zip.ReadCloser) ExpandDocx() {
+// ExpandDocx method
+func ExpandDocx(z *zip.ReadCloser) {
 	return
 }
 
 // Unzip for exposing contexts of zip.
+// TODO: Modularize
 func Unzip(pathToFile, saveLocation string) error {
 	reader, err := zip.OpenReader(pathToFile)
 	if err != nil {
@@ -37,12 +45,10 @@ func Unzip(pathToFile, saveLocation string) error {
 	}
 
 	for _, file := range reader.File {
-		path := filepath.Join(saveLocation, file.Name)
-
 		/* file.FileInfo().IsDir() returns false in every case
 		file.FileInfo() returns os.FileInfo
 		*/
-
+		path := filepath.Join(saveLocation, file.Name)
 		dirPath := filepath.Dir(path)
 		os.MkdirAll(dirPath, 0777)
 		_, err := os.Create(path)
