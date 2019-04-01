@@ -2,7 +2,6 @@ package docxreader
 
 import (
 	"archive/zip"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -30,7 +29,9 @@ func DocxUnzip(pathToFile, saveLocation string) error {
 	}
 
 	zipFiles := ExtractFiles(reader)
-	fmt.Println(zipFiles)
+	if err := zipFiles.MapFiles(saveLocation, CopyToOS); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -45,7 +46,7 @@ func ExtractFiles(z *zip.ReadCloser) *ZipFiles {
 // MapFiles for iterating through zip.File slice
 // and performing an operation on it.
 // TODO: method should accect a func param to perform on each file or perhaps more than one func
-func (f *ZipFiles) MapFiles(saveLocation string, fn func(fi *zip.File) error) error {
+func (f *ZipFiles) MapFiles(saveLocation string, fn func(fi *zip.File, filepath string) error) error {
 	for _, file := range f.Files {
 		path := filepath.Join(saveLocation, file.Name)
 		dirPath := filepath.Dir(path)
@@ -55,7 +56,7 @@ func (f *ZipFiles) MapFiles(saveLocation string, fn func(fi *zip.File) error) er
 			return err
 		}
 
-		if err := CopyToOS(file, path); err != nil {
+		if err := fn(file, path); err != nil {
 			return err
 		}
 	}
