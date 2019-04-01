@@ -55,22 +55,7 @@ func (f *ZipFiles) MapFiles(saveLocation string, fn func(fi *zip.File) error) er
 			return err
 		}
 
-		fn(file)
-
-		fileReader, err := file.Open()
-		if err != nil {
-			return err
-		}
-		defer fileReader.Close()
-
-		targetFile, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC, file.Mode())
-		if err != nil {
-			return err
-		}
-
-		defer targetFile.Close()
-
-		if _, err := io.Copy(targetFile, fileReader); err != nil {
+		if err := CopyToOS(file, path); err != nil {
 			return err
 		}
 	}
