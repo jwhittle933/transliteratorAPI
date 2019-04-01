@@ -1,11 +1,9 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	engine "../engines"
-	pdfreader "../pdfreader"
 	"./uploader"
 	"github.com/labstack/echo"
 )
@@ -24,16 +22,6 @@ func Uploader(c echo.Context) error {
 
 	// f of type os.File, bytesWritten of type int, pathToFile of type string
 	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(fileContents), "txt")
-
-	if mime == "application/pdf" {
-		// pdfreader.PdfReader from package pdfreader >> Experimental
-		pdfFileBytes, _ := pdfreader.PdfReader(file)
-		fmt.Println("BYTES FROM PDF READER", pdfFileBytes)
-	}
-
-	if mime == "application/zip" {
-		//
-	}
 
 	// lang of type string, transliteratedContents of type string
 	lang, transliteratedContents := engine.Transliterate(fileContents)
