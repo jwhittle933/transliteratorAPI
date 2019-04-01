@@ -2,29 +2,27 @@ package docxreader
 
 import (
 	"archive/zip"
-	"encoding/xml"
 	"io"
 	"os"
 	"path/filepath"
 )
 
-// Body struct
-type Body struct {
-	Paragraph []string `xml:"p>r>t"`
+// DocxUnzip for reading Word .docx files.
+func DocxUnzip(pathToFile, saveLocation string) error {
+	reader, err := zip.OpenReader(pathToFile)
+	if err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(saveLocation, 0755); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// Document struct
-type Document struct {
-	XMLName xml.Name `xml:"document"`
-	Body    Body     `xml:"body"`
-}
-
-// NOTES :
-// Office Docs (docx, xlsx, *x) are just zip files with xml.
-
-// DocxReader for reading Word .docx files.
-func DocxReader() {
-	//
+func (z *zip.ReadCloser) ExpandDocx() {
+	return
 }
 
 // Unzip for exposing contexts of zip.
