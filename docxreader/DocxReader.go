@@ -27,18 +27,9 @@ type Document struct {
 }
 
 // DocxUnzip for reading Word .docx files.
-/*
- TODO: Accept []byte of read contents of submitted docx
- TODO: Use read data to create unzip, rather than creating tmp file
- TODO: Write data to disc or keep in memory?
-*/
 func DocxUnzip(pathToFile string) error {
 	saveLocation := fmt.Sprintf("./saves/dir-%d/unzip", uuid.New())
 	zip := ExtractFiles(pathToFile)
-
-	if err := os.MkdirAll(saveLocation, 0755); err != nil {
-		return err
-	}
 
 	if err := zip.MapFiles(saveLocation); err != nil {
 		return err
@@ -63,6 +54,9 @@ func ExtractFiles(pathToFile string) *Zip {
 // MapFiles for iterating through zip.File slice
 // and performing an operation on it.
 func (f *Zip) MapFiles(saveLocation string) error {
+	if err := os.MkdirAll(saveLocation, 0755); err != nil {
+		return err
+	}
 	for _, file := range f.Files {
 		path := filepath.Join(saveLocation, file.Name)
 		dirPath := filepath.Dir(path)
