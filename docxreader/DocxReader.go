@@ -44,7 +44,7 @@ func ExtractFiles(pathToFile string) *Zip {
 	if err != nil {
 		panic(err)
 	}
-	defer reader.Close()
+	// defer reader.Close()
 	return &Zip{
 		Reader: reader,
 		Files:  reader.File,
@@ -98,6 +98,16 @@ func CopyToOS(file *zip.File, filePath string) error {
 	// fmt.Println("Reading XML", t.Text)
 
 	return nil
+}
+
+//FindDoc locates file named word/document.xml
+func (f *Zip) FindDoc() (file *zip.File) {
+	for _, fi := range f.Files {
+		if file.Name == "word/document.xml" {
+			file = fi
+		}
+	}
+	return file
 }
 
 // XMLExtractText for manipulating xml
