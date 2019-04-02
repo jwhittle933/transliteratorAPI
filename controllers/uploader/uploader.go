@@ -17,8 +17,8 @@ import (
 
 // ReadFile consumes *multipart.FileHeader and returns string, error
 func ReadFile(file *multipart.FileHeader) (string, string, error) {
-	fmt.Println("Reading file (from ReadFile): ", file.Filename)
-	fmt.Println("File size (from ReadFile): ", file.Size)
+	fmt.Println("Reading file: ", file.Filename)
+	fmt.Println("File size: ", file.Size)
 
 	data, err := file.Open()
 	if err != nil {
@@ -44,7 +44,7 @@ func ReadFile(file *multipart.FileHeader) (string, string, error) {
 		if err != nil {
 			panic(err)
 		}
-		saveLocation := fmt.Sprintf("./dir-%d/unzip", uuid.New())
+		saveLocation := fmt.Sprintf("./saves/dir-%d/unzip", uuid.New())
 		if err := docxreader.DocxUnzip(pathToFile, saveLocation); err != nil {
 			fmt.Println(err)
 		}

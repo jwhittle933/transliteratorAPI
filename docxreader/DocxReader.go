@@ -28,8 +28,7 @@ func DocxUnzip(pathToFile, saveLocation string) error {
 		return err
 	}
 
-	zipFiles := ExtractFiles(reader)
-	if err := zipFiles.MapFiles(saveLocation); err != nil {
+	if err := ExtractFiles(reader).MapFiles(saveLocation); err != nil {
 		return err
 	}
 
