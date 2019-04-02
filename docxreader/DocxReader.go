@@ -44,6 +44,7 @@ func ExtractFiles(pathToFile string) *Zip {
 	if err != nil {
 		panic(err)
 	}
+	defer reader.Close()
 	return &Zip{
 		Reader: reader,
 		Files:  reader.File,
