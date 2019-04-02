@@ -2,9 +2,12 @@ package docxreader
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/google/uuid"
 )
 
 // Zip struct for handling extention methods on unziped files.
@@ -18,7 +21,7 @@ type XMLData struct {
 	Text string `xml:"w:t"`
 }
 
-// Document type extracted from docx zip.
+// Document type for storing word/document.xml extracted from docx zip.
 type Document struct {
 	Doc *zip.File
 }
@@ -29,7 +32,8 @@ type Document struct {
  TODO: Use read data to create unzip, rather than creating tmp file
  TODO: Write data to disc or keep in memory?
 */
-func DocxUnzip(pathToFile, saveLocation string) error {
+func DocxUnzip(pathToFile string) error {
+	saveLocation := fmt.Sprintf("./saves/dir-%d/unzip", uuid.New())
 	zip := ExtractFiles(pathToFile)
 
 	if err := os.MkdirAll(saveLocation, 0755); err != nil {
