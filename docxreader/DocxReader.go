@@ -2,33 +2,36 @@ package docxreader
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/google/uuid"
 )
 
-// ZipFiles struct for handling extention methods on unziped files.
-type ZipFiles struct {
-	Files []*zip.File
+// Zip struct for handling extention methods on unziped files.
+type Zip struct {
+	Reader *zip.ReadCloser
+	Files  []*zip.File
+}
+
+// XMLData struct for Unmarshalling xml.
+type XMLData struct {
+	Text string `xml:"w:t"`
+}
+
+// Document type for storing word/document.xml extracted from docx zip.
+type Document struct {
+	Doc *zip.File
 }
 
 // DocxUnzip for reading Word .docx files.
-/*
- TODO: Accept []byte of read contents of submitted docx
- TODO: Use read data to create unzip, rather than creating tmp file
- TODO: Write data to disc or keep in memory?
-*/
-func DocxUnzip(pathToFile, saveLocation string) error {
-	reader, err := zip.OpenReader(pathToFile)
-	if err != nil {
-		return err
-	}
+func DocxUnzip(pathToFile string) error {
+	saveLocation := fmt.Sprintf("./saves/dir-%d/unzip", uuid.New())
+	zip := ExtractFiles(pathToFile)
 
-	if err := os.MkdirAll(saveLocation, 0755); err != nil {
-		return err
-	}
-
-	if err := ExtractFiles(reader).MapFiles(saveLocation); err != nil {
+	if err := zip.MapFiles(saveLocation); err != nil {
 		return err
 	}
 
@@ -36,15 +39,24 @@ func DocxUnzip(pathToFile, saveLocation string) error {
 }
 
 // ExtractFiles returns []*zip.File.
-func ExtractFiles(z *zip.ReadCloser) *ZipFiles {
-	return &ZipFiles{
-		Files: z.File,
+func ExtractFiles(pathToFile string) *Zip {
+	reader, err := zip.OpenReader(pathToFile)
+	if err != nil {
+		panic(err)
+	}
+	// defer reader.Close()
+	return &Zip{
+		Reader: reader,
+		Files:  reader.File,
 	}
 }
 
 // MapFiles for iterating through zip.File slice
 // and performing an operation on it.
-func (f *ZipFiles) MapFiles(saveLocation string) error {
+func (f *Zip) MapFiles(saveLocation string) error {
+	if err := os.MkdirAll(saveLocation, 0755); err != nil {
+		return err
+	}
 	for _, file := range f.Files {
 		path := filepath.Join(saveLocation, file.Name)
 		dirPath := filepath.Dir(path)
@@ -80,10 +92,30 @@ func CopyToOS(file *zip.File, filePath string) error {
 		return err
 	}
 
+	// t := XMLData{}
+	// data, err := ioutil.ReadAll(targetFile)
+	// if err != nil {
+	// 	return err
+	// }
+	// xml.Unmarshal([]byte(data), &t)
+	// fmt.Println("Reading XML", t.Text)
+
 	return nil
 }
 
-// XMLManip for manipulating xml
-func XMLManip() {
+//FindDoc locates file named word/document.xml
+func (f *Zip) FindDoc() (file *Document) {
+	for _, fi := range f.Files {
+		if fi.Name == "word/document.xml" {
+			file = &Document{
+				Doc: fi,
+			}
+		}
+	}
+	return file
+}
+
+// XMLExtractText for manipulating xml
+func XMLExtractText() {
 	return
 }
