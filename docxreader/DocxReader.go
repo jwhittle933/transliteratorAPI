@@ -18,6 +18,11 @@ type XMLData struct {
 	Text string `xml:"w:t"`
 }
 
+// Document type extracted from docx zip.
+type Document struct {
+	Doc *zip.File
+}
+
 // DocxUnzip for reading Word .docx files.
 /*
  TODO: Accept []byte of read contents of submitted docx
@@ -101,10 +106,12 @@ func CopyToOS(file *zip.File, filePath string) error {
 }
 
 //FindDoc locates file named word/document.xml
-func (f *Zip) FindDoc() (file *zip.File) {
+func (f *Zip) FindDoc() (file *Document) {
 	for _, fi := range f.Files {
-		if file.Name == "word/document.xml" {
-			file = fi
+		if fi.Name == "word/document.xml" {
+			file = &Document{
+				Doc: fi,
+			}
 		}
 	}
 	return file
