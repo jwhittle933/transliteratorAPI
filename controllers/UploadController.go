@@ -21,6 +21,7 @@ func Uploader(c echo.Context) error {
 	errCheck(c, err)
 
 	// f of type os.File, bytesWritten of type int, pathToFile of type string
+	// TODO: replace with ioutil.TempFile <<<<
 	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(fileContents), "txt")
 
 	// lang of type string, transliteratedContents of type string
