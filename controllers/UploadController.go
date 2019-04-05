@@ -3,12 +3,11 @@ package controllers
 import (
 	"fmt"
 	"io/ioutil"
-	"mime/multipart"
+	"log"
 	"net/http"
 	"os"
 
 	engine "../engines"
-	"./uploader"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 )
@@ -36,7 +35,9 @@ func Uploader(c echo.Context) error {
 
 	// f of type os.File, bytesWritten of type int, pathToFile of type string
 	// TODO: replace with ioutil.TempFile <<<<
-	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(string(src)), "txt")
+	if err := CreateTempFile(src); err != nil {
+		errCheck(c, err)
+	}
 
 	// lang of type string, transliteratedContents of type string
 	lang, transliteratedContents := engine.Transliterate(string(src))
@@ -55,14 +56,27 @@ func Uploader(c echo.Context) error {
 	})
 }
 
-// DetectFileType to determine mime
-func DetectFileType(file multipart.File) (string, error) {
-	src, err := ioutil.ReadAll(file)
+// CreateTempFile wrapper func for ioutil.TempFile
+func CreateTempFile(src []byte) error {
+	uuid := uuid.New()
+	tempFile, err := ioutil.TempFile("../tmp", fmt.Sprintf("%d", uuid))
 	if err != nil {
-		return "There was an error reading the file.", err
+		log.Fatal(err)
+		return err
 	}
-	mime := http.DetectContentType(src)
-	return mime, nil
+	defer os.Remove(tempFile.Name())
+
+	if _, err := tempFile.Write(src); err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	if err := tempFile.Close(); err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
 }
 
 func errCheck(c echo.Context, err error) error {
