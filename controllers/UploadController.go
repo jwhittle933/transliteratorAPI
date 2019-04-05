@@ -29,13 +29,8 @@ func Uploader(c echo.Context) error {
 
 	mime := http.DetectContentType(src)
 
-	uuid := uuid.New()
-	tempFile, err := ioutil.TempFile("../tmp", fmt.Sprintf("%d", uuid))
-	defer os.Remove(tempFile.Name())
-
-	// f of type os.File, bytesWritten of type int, pathToFile of type string
-	// TODO: replace with ioutil.TempFile <<<<
-	if err := CreateTempFile(src); err != nil {
+	tempFile, err := CreateTempFile(src)
+	if err != nil {
 		errCheck(c, err)
 	}
 
@@ -58,26 +53,29 @@ func Uploader(c echo.Context) error {
 }
 
 // CreateTempFile wrapper func for ioutil.TempFile
-func CreateTempFile(src []byte) error {
+func CreateTempFile(src []byte) (*os.File, error) {
 	uuid := uuid.New()
-	tempFile, err := ioutil.TempFile("../tmp", fmt.Sprintf("%d", uuid))
+	tempDir := "../tmp"
+	tempFileName := "file-" + fmt.Sprintf("%d", uuid)
+	// TODO: create download path-to-file
+	tempFile, err := ioutil.TempFile(tempDir, tempFileName)
 	if err != nil {
 		log.Fatal(err)
-		return err
+		return nil, err
 	}
 	defer os.Remove(tempFile.Name())
 
 	if _, err := tempFile.Write(src); err != nil {
 		log.Fatal(err)
-		return err
+		return nil, err
 	}
 
 	if err := tempFile.Close(); err != nil {
 		log.Fatal(err)
-		return err
+		return nil, err
 	}
 
-	return nil
+	return tempFile, nil
 }
 
 func errCheck(c echo.Context, err error) error {
