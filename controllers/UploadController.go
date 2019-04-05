@@ -1,10 +1,15 @@
 package controllers
 
 import (
+	"fmt"
+	"io/ioutil"
+	"mime/multipart"
 	"net/http"
+	"os"
 
 	engine "../engines"
 	"./uploader"
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 )
 
@@ -16,16 +21,25 @@ func Uploader(c echo.Context) error {
 	file, err := c.FormFile("file")
 	errCheck(c, err)
 
-	// mime of type string, fileContents of type string
-	mime, fileContents, err := uploader.ReadFile(file)
+	data, err := file.Open()
 	errCheck(c, err)
+	defer data.Close()
+
+	src, err := ioutil.ReadAll(data)
+	errCheck(c, err)
+
+	mime := http.DetectContentType(src)
+
+	uuid := uuid.New()
+	tempFile, err := ioutil.TempFile("../tmp", fmt.Sprintf("%d", uuid))
+	defer os.Remove(tempFile.Name())
 
 	// f of type os.File, bytesWritten of type int, pathToFile of type string
 	// TODO: replace with ioutil.TempFile <<<<
-	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(fileContents), "txt")
+	f, bytesWritten, pathToFile, err := uploader.CreateTempFile([]byte(string(src)), "txt")
 
 	// lang of type string, transliteratedContents of type string
-	lang, transliteratedContents := engine.Transliterate(fileContents)
+	lang, transliteratedContents := engine.Transliterate(string(src))
 
 	errCheck(c, err)
 
@@ -39,6 +53,16 @@ func Uploader(c echo.Context) error {
 		BytesWritten:       bytesWritten,
 		DownloadLink:       "http://localhost:3000" + pathToFile,
 	})
+}
+
+// DetectFileType to determine mime
+func DetectFileType(file multipart.File) (string, error) {
+	src, err := ioutil.ReadAll(file)
+	if err != nil {
+		return "There was an error reading the file.", err
+	}
+	mime := http.DetectContentType(src)
+	return mime, nil
 }
 
 func errCheck(c echo.Context, err error) error {

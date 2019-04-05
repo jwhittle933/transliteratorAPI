@@ -1,6 +1,9 @@
 package controllers
 
-import "os"
+import (
+	"mime/multipart"
+	"os"
+)
 
 // Resp struct for response schema.
 type Resp struct {
@@ -33,4 +36,13 @@ type UploadSuccess struct {
 	TransliteratedText string
 	BytesWritten       int
 	DownloadLink       string
+}
+
+// File struct
+type File struct {
+	File        multipart.File
+	Mime        string
+	Size        int64
+	ByteContent []byte
+	TextContext string
 }
