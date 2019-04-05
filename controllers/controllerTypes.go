@@ -31,7 +31,8 @@ type UploadSuccess struct {
 	Code               int64
 	Message            string
 	Language           string
-	OriginalFile       *os.File
+	OriginalFile       multipart.File
+	TempFile           *os.File
 	FileType           string
 	TransliteratedText string
 	BytesWritten       int
