@@ -48,11 +48,12 @@ func Uploader(c echo.Context) error {
 		Code:               http.StatusOK,
 		Message:            "File Succesfully read.",
 		Language:           lang,
-		OriginalFile:       f,
+		OriginalFile:       data,
+		TempFile:           tempFile,
 		FileType:           mime,
 		TransliteratedText: transliteratedContents,
-		BytesWritten:       bytesWritten,
-		DownloadLink:       "http://localhost:3000" + pathToFile,
+		BytesWritten:       len(src),
+		// DownloadLink:       "http://localhost:3000" + tempFile,
 	})
 }
 
