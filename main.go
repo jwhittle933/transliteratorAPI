@@ -7,10 +7,6 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-var middlewareConfig = middleware.LoggerConfig{
-	Format: "method=${method}, uri=${uri}, status=${status}\n",
-}
-
 func main() {
 	e := Init()
 
