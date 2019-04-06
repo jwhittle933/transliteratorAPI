@@ -5,24 +5,25 @@ import (
 	"net/http"
 
 	engine "../engine"
+	"../types"
 	"github.com/labstack/echo"
 )
 
 // Transliterator route handler
 func Transliterator(c echo.Context) error {
-	var erm *ErrorMessage
+	var erm *types.ErrorMessage
 	req := c.Request()
 	fmt.Println(req)
 	text := c.QueryParam("text")
 	if len(text) == 0 {
-		erm = &ErrorMessage{
+		erm = &types.ErrorMessage{
 			Code:    http.StatusBadRequest,
 			Message: "No text provided.",
 		}
 		return c.JSON(http.StatusBadRequest, erm)
 	}
 	if lang, output := engine.Transliterate(text); output != "Error." {
-		response := &SuccessfulResponse{
+		response := &types.SuccessfulResponse{
 			Code:               http.StatusOK,
 			Message:            "Successful.",
 			Language:           lang,
@@ -31,7 +32,7 @@ func Transliterator(c echo.Context) error {
 		}
 		return c.JSON(http.StatusOK, response)
 	}
-	erm = &ErrorMessage{
+	erm = &types.ErrorMessage{
 		Code:    http.StatusBadRequest,
 		Message: "Error",
 	}
