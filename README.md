@@ -1,6 +1,6 @@
 ## Transliterator API
 
-A replacement for previous version
+[![Build Status](https://travis-ci.com/jwhittle933/transliteratorAPI.svg?branch=master)](https://travis-ci.com/jwhittle933/transliteratorAPI)
 
 ## File Tree
 
