@@ -18,6 +18,8 @@ var middlewareConfig = middleware.LoggerConfig{
 
 func main() {
 	e := start.Init()
+
+	// MIDDLEWARE
 	e.Use(middleware.LoggerWithConfig(middlewareConfig))
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -29,6 +31,7 @@ func main() {
 		}
 	})
 
+	// ROUTES
 	e.GET("/", baseRouteHandler)
 	e.GET("/transliterate", controllers.Transliterator)
 	e.POST("/upload", controllers.Uploader)
@@ -43,6 +46,7 @@ func main() {
 		return false, nil
 	}))
 
+	// START
 	e.Logger.Fatal(e.Start(":3000"))
 }
 
