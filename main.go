@@ -11,16 +11,7 @@ func main() {
 	e := Init()
 
 	// MIDDLEWARE
-	e.Use(middleware.LoggerWithConfig(middlewareConfig))
-	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			// For invalid credentials
-			// return echo.NewHTTPError(http.StatusUnauthorized, "Please provide valid credentials")
-
-			// For valid credentials call next
-			return next(c)
-		}
-	})
+	MiddleWare(e)
 
 	// ROUTES
 	e.GET("/", baseRouteHandler)
