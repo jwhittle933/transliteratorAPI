@@ -9,6 +9,7 @@ import (
 
 	engine "../engines"
 	"github.com/google/uuid"
+	"github.com/jwhittle933/docxology"
 	"github.com/labstack/echo"
 )
 
@@ -16,7 +17,9 @@ import (
 
 // Uploader for reading uploaded file
 func Uploader(c echo.Context) error {
-	// file of type multitpart.FileHeader
+	var transliteratedContents string
+	var lang string
+
 	file, err := c.FormFile("file")
 	errCheck(c, err)
 
@@ -29,13 +32,26 @@ func Uploader(c echo.Context) error {
 
 	mime := http.DetectContentType(src)
 
+	if mime == "application/xml" {
+		zip := docxology.ExtractFileHTTP(file)
+		zipFile := zip.FindDoc("word/document.xml")
+		macroData := zipFile.XMLExtractText()
+		documentText := macroData.Text
+		lang, transliteratedContents = engine.Transliterate(documentText)
+	}
+
+	if mime == "application/pdf" {
+		// Extract the pdf text
+	}
+
+	if mime == "text/plain" {
+		lang, transliteratedContents = engine.Transliterate(string(src))
+	}
+
 	tempFile, err := CreateTempFile(src)
 	if err != nil {
 		errCheck(c, err)
 	}
-
-	// lang of type string, transliteratedContents of type string
-	lang, transliteratedContents := engine.Transliterate(string(src))
 
 	errCheck(c, err)
 
@@ -76,6 +92,16 @@ func CreateTempFile(src []byte) (*os.File, error) {
 	}
 
 	return tempFile, nil
+}
+
+// DestroyFile for deletion of tempfile on download request
+func DestroyFile(fileLoc string) error {
+	err := os.Remove(fileLoc)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
 }
 
 func errCheck(c echo.Context, err error) error {
