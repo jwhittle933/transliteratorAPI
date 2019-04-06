@@ -1,4 +1,4 @@
-package controllers
+package main
 
 import (
 	"fmt"
@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"os"
 
-	engine "../engine"
-	"../types"
 	"github.com/google/uuid"
 	"github.com/jwhittle933/docxology"
 	"github.com/labstack/echo"
@@ -16,8 +14,8 @@ import (
 
 // https://www.devdungeon.com/content/working-files-go#everything_is_a_file
 
-// Uploader for reading uploaded file
-func Uploader(c echo.Context) error {
+// UploadController for reading uploaded file
+func UploadController(c echo.Context) error {
 	var transliteratedContents string
 	var lang string
 
@@ -38,7 +36,7 @@ func Uploader(c echo.Context) error {
 		zipFile := zip.FindDoc("word/document.xml")
 		macroData := zipFile.XMLExtractText()
 		documentText := macroData.Text
-		lang, transliteratedContents = engine.Transliterate(documentText)
+		lang, transliteratedContents = Transliterate(documentText)
 	}
 
 	if mime == "application/pdf" {
@@ -46,7 +44,7 @@ func Uploader(c echo.Context) error {
 	}
 
 	if mime == "text/plain" {
-		lang, transliteratedContents = engine.Transliterate(string(src))
+		lang, transliteratedContents = Transliterate(string(src))
 	}
 
 	tempFile, err := CreateTempFile(src)
@@ -56,7 +54,7 @@ func Uploader(c echo.Context) error {
 
 	errCheck(c, err)
 
-	return c.JSON(http.StatusOK, &types.UploadSuccess{
+	return c.JSON(http.StatusOK, &UploadSuccess{
 		Code:               http.StatusOK,
 		Message:            "File Succesfully read.",
 		Language:           lang,
@@ -67,6 +65,36 @@ func Uploader(c echo.Context) error {
 		BytesWritten:       len(src),
 		// DownloadLink:       "http://localhost:3000" + tempFile,
 	})
+}
+
+// TransliterateController route handler
+func TransliterateController(c echo.Context) error {
+	var erm *ErrorMessage
+	req := c.Request()
+	fmt.Println(req)
+	text := c.QueryParam("text")
+	if len(text) == 0 {
+		erm = &ErrorMessage{
+			Code:    http.StatusBadRequest,
+			Message: "No text provided.",
+		}
+		return c.JSON(http.StatusBadRequest, erm)
+	}
+	if lang, output := Transliterate(text); output != "Error." {
+		response := &SuccessfulResponse{
+			Code:               http.StatusOK,
+			Message:            "Successful.",
+			Language:           lang,
+			SubmittedText:      text,
+			TransliteratedText: output,
+		}
+		return c.JSON(http.StatusOK, response)
+	}
+	erm = &ErrorMessage{
+		Code:    http.StatusBadRequest,
+		Message: "Error",
+	}
+	return c.JSON(http.StatusBadRequest, erm)
 }
 
 // CreateTempFile wrapper func for ioutil.TempFile
@@ -107,7 +135,7 @@ func DestroyFile(fileLoc string) error {
 
 func errCheck(c echo.Context, err error) error {
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, &types.ErrorMessage{
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
 			Code:    http.StatusBadRequest,
 			Message: "There was an error.",
 		})
