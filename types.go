@@ -1,23 +1,23 @@
-package types
+package main
 
 import (
 	"mime/multipart"
 	"os"
 )
 
-// Resp struct for response schema.
+// Resp struct for basic response schema.
 type Resp struct {
 	Code    int64
 	Message string
 }
 
-// ErrorMessage for forming error repsonses
+// ErrorMessage for error repsonses
 type ErrorMessage struct {
 	Code    int64
 	Message string
 }
 
-// SuccessfulResponse struct.
+// SuccessfulResponse for transliterate success message.
 type SuccessfulResponse struct {
 	Code               int64
 	Message            string
@@ -26,7 +26,7 @@ type SuccessfulResponse struct {
 	TransliteratedText string
 }
 
-// UploadSuccess struct.
+// UploadSuccess for upload success message.
 type UploadSuccess struct {
 	Code               int64
 	Message            string
