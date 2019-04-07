@@ -6,16 +6,21 @@
 
 ```bash
 .
+├── LICENSE
 ├── README.md
+├── controllers
+│   ├── transliterate.go
+│   └── upload.go
 ├── controllers.go
-├── engine.go
-├── init.go
+├── engine
+│   └── engine.go
+├── init
+│   └── init.go
 ├── main.go
-├── middlewarehelpers
-│   └── MiddlewareHelpers.go
+├── middleware
+│   └── middleware.go
 ├── pdfReader
 │   └── pdfReader.go
-├── saves
 ├── scripts
 │   ├── govars.sh
 │   └── govarsBasic.sh
@@ -29,7 +34,8 @@
 │   ├── test.pdf
 │   └── test.txt
 ├── tmp
-└── types.go
+└── types
+    └── types.go
 ```
 
 ## Setup Scripts
