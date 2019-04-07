@@ -1,4 +1,4 @@
-package main
+package controllers
 
 import (
 	"fmt"
@@ -7,7 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"./types"
+	"../engine"
+	"../types"
 	"github.com/google/uuid"
 	"github.com/jwhittle933/docxology"
 	"github.com/labstack/echo"
@@ -37,7 +38,7 @@ func UploadController(c echo.Context) error {
 		zipFile := zip.FindDoc("word/document.xml")
 		macroData := zipFile.XMLExtractText()
 		documentText := macroData.Text
-		lang, transliteratedContents = Transliterate(documentText)
+		lang, transliteratedContents = engine.Transliterate(documentText)
 	}
 
 	if mime == "application/pdf" {
@@ -45,7 +46,7 @@ func UploadController(c echo.Context) error {
 	}
 
 	if mime == "text/plain" {
-		lang, transliteratedContents = Transliterate(string(src))
+		lang, transliteratedContents = engine.Transliterate(string(src))
 	}
 
 	tempFile, err := CreateTempFile(src)
@@ -66,36 +67,6 @@ func UploadController(c echo.Context) error {
 		BytesWritten:       len(src),
 		// DownloadLink:       "http://localhost:3000" + tempFile,
 	})
-}
-
-// TransliterateController route handler
-func TransliterateController(c echo.Context) error {
-	var erm *types.ErrorMessage
-	req := c.Request()
-	fmt.Println(req)
-	text := c.QueryParam("text")
-	if len(text) == 0 {
-		erm = &types.ErrorMessage{
-			Code:    http.StatusBadRequest,
-			Message: "No text provided.",
-		}
-		return c.JSON(http.StatusBadRequest, erm)
-	}
-	if lang, output := Transliterate(text); output != "Error." {
-		response := &types.SuccessfulResponse{
-			Code:               http.StatusOK,
-			Message:            "Successful.",
-			Language:           lang,
-			SubmittedText:      text,
-			TransliteratedText: output,
-		}
-		return c.JSON(http.StatusOK, response)
-	}
-	erm = &types.ErrorMessage{
-		Code:    http.StatusBadRequest,
-		Message: "Error",
-	}
-	return c.JSON(http.StatusBadRequest, erm)
 }
 
 // CreateTempFile wrapper func for ioutil.TempFile

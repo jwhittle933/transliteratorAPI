@@ -3,20 +3,25 @@ package main
 import (
 	"net/http"
 
+	"./controllers"
+	start "./init"
+	mw "./middleware"
+	"./types"
+
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
 func main() {
-	e := Init()
+	e := start.Init()
 
 	// MIDDLEWARE
-	MiddleWare(e)
+	mw.MiddleWare(e)
 
 	// ROUTES
 	e.GET("/", baseRouteHandler)
-	e.GET("/transliterate", TransliterateController)
-	e.POST("/upload", UploadController)
+	e.GET("/transliterate", controllers.TransliterateController)
+	e.POST("/upload", controllers.UploadController)
 	e.GET("/upload", uploadRouteHandler)
 	e.Static("/tmp", "tmp")
 
@@ -33,7 +38,7 @@ func main() {
 }
 
 func baseRouteHandler(c echo.Context) error {
-	resp := &Resp{
+	resp := &types.Resp{
 		Code:    200,
 		Message: "Transliterator API",
 	}
@@ -41,7 +46,7 @@ func baseRouteHandler(c echo.Context) error {
 }
 
 func uploadRouteHandler(c echo.Context) error {
-	resp := &Resp{
+	resp := &types.Resp{
 		Code:    200,
 		Message: "Upload a file",
 	}

@@ -1,4 +1,4 @@
-package main
+package engine
 
 // Greek character map
 var Greek = map[string]string{
