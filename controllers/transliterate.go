@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/jwhittle933/transliteratorAPI/engine"
@@ -12,8 +11,6 @@ import (
 // TransliterateController route handler
 func TransliterateController(c echo.Context) error {
 	var erm *types.ErrorMessage
-	req := c.Request()
-	fmt.Println(req)
 	text := c.QueryParam("text")
 	if len(text) == 0 {
 		erm = &types.ErrorMessage{
