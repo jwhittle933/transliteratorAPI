@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"../engine"
-	"../types"
+	"github.com/jwhittle933/transliteratorAPI/engine"
+	"github.com/jwhittle933/transliteratorAPI/types"
 	"github.com/labstack/echo"
 )
 

@@ -3,11 +3,10 @@ package main
 import (
 	"net/http"
 
-	"./controllers"
-	//"github.com/jwhittle933/transliteratorAPI/controllers"
-	start "./init"
-	mw "./middleware"
-	"./types"
+	"github.com/jwhittle933/transliteratorAPI/controllers"
+	start "github.com/jwhittle933/transliteratorAPI/init"
+	mw "github.com/jwhittle933/transliteratorAPI/middleware"
+	"github.com/jwhittle933/transliteratorAPI/types"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
