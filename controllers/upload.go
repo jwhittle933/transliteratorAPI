@@ -20,7 +20,6 @@ import (
 func UploadController(c echo.Context) error {
 	var transliteratedContents string
 	var lang string
-	fmt.Println("Upload Controller")
 
 	file, err := c.FormFile("file")
 	errCheck(c, err)
@@ -35,10 +34,11 @@ func UploadController(c echo.Context) error {
 	mime := http.DetectContentType(src)
 	fmt.Println(mime)
 
-	if mime == "application/xml" {
+	if mime == "application/zip" {
 		zip := docxology.ExtractFileHTTP(file)
 		zipFile := zip.FindDoc("word/document.xml")
 		macroData := zipFile.XMLExtractText()
+		fmt.Println(macroData)
 		documentText := macroData.Text
 		lang, transliteratedContents = engine.Transliterate(documentText)
 	}
