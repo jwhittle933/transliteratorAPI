@@ -9,7 +9,6 @@ import (
 func MiddleWare(e *echo.Echo) {
 	Logger(e)
 	Authenticate(e)
-	SetCors(e)
 }
 
 // SetCors for allowing Cross-Origin

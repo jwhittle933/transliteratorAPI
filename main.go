@@ -9,7 +9,6 @@ import (
 	"github.com/jwhittle933/transliteratorAPI/types"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 )
 
 func main() {
@@ -25,13 +24,13 @@ func main() {
 	e.GET("/upload", uploadRouteHandler)
 	e.Static("/tmp", "tmp")
 
-	auth := e.Group("/auth")
-	auth.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
-		if username == "Joe" && password == "password" {
-			return true, nil
-		}
-		return false, nil
-	}))
+	// auth := e.Group("/auth")
+	// auth.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+	// 	if username == "Joe" && password == "password" {
+	// 		return true, nil
+	// 	}
+	// 	return false, nil
+	// }))
 
 	// START
 	e.Logger.Fatal(e.Start(":3000"))
