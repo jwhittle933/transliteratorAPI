@@ -47,7 +47,7 @@ func UploadController(c echo.Context) error {
 		// Extract the pdf text
 	}
 
-	if mime == "text/plain" {
+	if mime == "text/plain; charset=utf-8" {
 		lang, transliteratedContents = engine.Transliterate(string(src))
 	}
 
