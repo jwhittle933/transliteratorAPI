@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/google/uuid"
 	"github.com/jwhittle933/docxology"
 	"github.com/jwhittle933/transliteratorAPI/engine"
 	"github.com/jwhittle933/transliteratorAPI/types"
@@ -20,6 +19,7 @@ import (
 func UploadController(c echo.Context) error {
 	var transliteratedContents string
 	var lang string
+	fmt.Println("Upload Controller")
 
 	file, err := c.FormFile("file")
 	errCheck(c, err)
@@ -32,6 +32,7 @@ func UploadController(c echo.Context) error {
 	errCheck(c, err)
 
 	mime := http.DetectContentType(src)
+	fmt.Println(mime)
 
 	if mime == "application/xml" {
 		zip := docxology.ExtractFileHTTP(file)
@@ -49,10 +50,10 @@ func UploadController(c echo.Context) error {
 		lang, transliteratedContents = engine.Transliterate(string(src))
 	}
 
-	tempFile, err := CreateTempFile(src)
-	if err != nil {
-		errCheck(c, err)
-	}
+	// tempFile, err := CreateTempFile(src)
+	// if err != nil {
+	// 	errCheck(c, err)
+	// }
 
 	errCheck(c, err)
 
@@ -61,7 +62,6 @@ func UploadController(c echo.Context) error {
 		Message:            "File Succesfully read.",
 		Language:           lang,
 		OriginalFile:       data,
-		TempFile:           tempFile,
 		FileType:           mime,
 		TransliteratedText: transliteratedContents,
 		BytesWritten:       len(src),
@@ -70,30 +70,30 @@ func UploadController(c echo.Context) error {
 }
 
 // CreateTempFile wrapper func for ioutil.TempFile
-func CreateTempFile(src []byte) (*os.File, error) {
-	uuid := uuid.New()
-	tempDir := "../tmp"
-	tempFileName := "file-" + fmt.Sprintf("%d", uuid)
-	// TODO: create download path-to-file
-	tempFile, err := ioutil.TempFile(tempDir, tempFileName)
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-	defer os.Remove(tempFile.Name())
+// func CreateTempFile(src []byte) (*os.File, error) {
+// 	uuid := uuid.New()
+// 	tempDir := "../tmp"
+// 	tempFileName := "file-" + fmt.Sprintf("%d", uuid)
+// 	// TODO: create download path-to-file
+// 	tempFile, err := ioutil.TempFile(tempDir, tempFileName)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 		return nil, err
+// 	}
+// 	defer os.Remove(tempFile.Name())
 
-	if _, err := tempFile.Write(src); err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
+// 	if _, err := tempFile.Write(src); err != nil {
+// 		log.Fatal(err)
+// 		return nil, err
+// 	}
 
-	if err := tempFile.Close(); err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
+// 	if err := tempFile.Close(); err != nil {
+// 		log.Fatal(err)
+// 		return nil, err
+// 	}
 
-	return tempFile, nil
-}
+// 	return tempFile, nil
+// }
 
 // DestroyFile for deletion of tempfile on download request
 func DestroyFile(fileLoc string) error {
