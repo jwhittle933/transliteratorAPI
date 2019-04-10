@@ -20,6 +20,8 @@ import (
 func UploadController(c echo.Context) error {
 	var transliteratedContents string
 	var lang string
+	var macroData docxology.XMLDocMacroData
+	var documentText string
 
 	file, err := c.FormFile("file")
 	errCheck(c, err)
@@ -37,9 +39,10 @@ func UploadController(c echo.Context) error {
 	if mime == "application/zip" {
 		zip := docxology.ExtractFileHTTP(file)
 		zipFile := zip.FindDoc("word/document.xml")
-		macroData := zipFile.XMLExtractText()
+		macroData = zipFile.XMLExtractText()
 		fmt.Println(macroData)
-		documentText := macroData.Text
+		documentText = macroData.Text
+		fmt.Println(documentText)
 		lang, transliteratedContents = engine.Transliterate(documentText)
 	}
 
