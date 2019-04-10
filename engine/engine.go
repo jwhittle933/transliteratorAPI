@@ -91,6 +91,7 @@ var Hebrew = map[string]string{
 	"ץ":  "ts",
 	"ק":  "q",
 	"ר":  "r",
+	"ש":  "sh",
 	"שׁ": "sh",
 	"שׂ": "s",
 	"ת":  "th",
