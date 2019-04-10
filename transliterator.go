@@ -25,6 +25,11 @@ func main() {
 	e.GET("/signup", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, "SIGNUP")
 	})
+	e.POST("/signup", func(c echo.Context) error {
+		email := c.FormValue("email")
+		password := c.FormValue("password")
+		return c.JSON(http.StatusOK, "SIGNUP")
+	})
 	e.Static("/tmp", "tmp")
 
 	// START
