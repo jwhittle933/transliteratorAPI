@@ -7,17 +7,27 @@ import (
 
 // MiddleWare func wrapper for setting all middleware
 func MiddleWare(e *echo.Echo) {
-	Logger(e)
-	Authenticate(e)
+	logger(e)
+	recover(e)
+	authenticate(e)
+	sendJWT(e)
 }
 
-// SetCors for allowing Cross-Origin
-func SetCors(e *echo.Echo) {
+func logger(e *echo.Echo) {
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
+}
+
+func setCors(e *echo.Echo) {
 	e.Use(middleware.CORS())
 }
 
-// Authenticate middleware.
-func Authenticate(e *echo.Echo) {
+func recover(e *echo.Echo) {
+	e.Use(middleware.RecoverWithConfig(middleware.DefaultRecoverConfig))
+}
+
+func authenticate(e *echo.Echo) {
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			// For invalid credentials
@@ -29,9 +39,9 @@ func Authenticate(e *echo.Echo) {
 	})
 }
 
-// Logger abstracts middleware logic. TODO
-func Logger(e *echo.Echo) {
-	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "method=${method}, uri=${uri}, status=${status}\n",
+func sendJWT(e *echo.Echo) {
+	e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey:  []byte("transliteratedToken"),
+		TokenLookup: "query:token",
 	}))
 }

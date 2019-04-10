@@ -10,6 +10,7 @@ import (
 	"github.com/jwhittle933/transliteratorAPI/types"
 
 	"github.com/labstack/echo"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 func main() {
@@ -17,6 +18,7 @@ func main() {
 
 	// MIDDLEWARE
 	mw.MiddleWare(e)
+	e.AutoTLSManager.Cache = autocert.DirCache("/cache")
 
 	// ROUTES
 	e.GET("/", baseRouteHandler)

@@ -5,6 +5,20 @@ import (
 	"os"
 )
 
+// User type for data persistenceß
+type User struct {
+	Name  string `json:"name" form:"name" query:"name"`
+	Email string `json:"email" form:"email" query:"email"`
+}
+
+// UserFirst struct for registering users
+type UserFirst struct {
+	FirstName string `json:"firstname" form:"firstname" query:"firstname"`
+	LastName  string `json:"lastname" form:"lastname" query:"lastname"`
+	Email     string `json:"email" form:"email" query:"email"`
+	Pass      string `json:"password" form:"password" query:"password"` //encrypt
+}
+
 // Resp struct for basic response schema.
 type Resp struct {
 	Code    int64
