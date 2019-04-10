@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/jwhittle933/transliteratorAPI/controllers"
@@ -28,6 +29,8 @@ func main() {
 	e.POST("/signup", func(c echo.Context) error {
 		email := c.FormValue("email")
 		password := c.FormValue("password")
+		fmt.Println(email)
+		fmt.Println(password)
 		return c.JSON(http.StatusOK, "SIGNUP")
 	})
 	e.Static("/tmp", "tmp")
