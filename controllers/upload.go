@@ -10,8 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jwhittle933/docxology"
 
-	// "github.com/jwhittle933/transliteratorAPI/engine"
-	"../engine"
+	"github.com/jwhittle933/transliteratorAPI/engine"
 	"github.com/jwhittle933/transliteratorAPI/types"
 	"github.com/labstack/echo"
 )

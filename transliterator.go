@@ -3,8 +3,7 @@ package main
 import (
 	"net/http"
 
-	// "github.com/jwhittle933/transliteratorAPI/controllers"
-	"./controllers"
+	"github.com/jwhittle933/transliteratorAPI/controllers"
 	start "github.com/jwhittle933/transliteratorAPI/init"
 	mw "github.com/jwhittle933/transliteratorAPI/middleware"
 	"github.com/jwhittle933/transliteratorAPI/types"
