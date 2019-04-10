@@ -9,7 +9,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jwhittle933/docxology"
-	"github.com/jwhittle933/transliteratorAPI/engine"
+
+	// "github.com/jwhittle933/transliteratorAPI/engine"
+	"../engine"
 	"github.com/jwhittle933/transliteratorAPI/types"
 	"github.com/labstack/echo"
 )
@@ -40,10 +42,13 @@ func UploadController(c echo.Context) error {
 		zip := docxology.ExtractFileHTTP(file)
 		zipFile := zip.FindDoc("word/document.xml")
 		macroData = zipFile.XMLExtractText()
-		fmt.Println("Macro Data: ", macroData)
 		documentText = macroData.Text
-		fmt.Println("Document Text: ", documentText)
 		lang, transliteratedContents = engine.Transliterate(documentText)
+		if lang == "Hebrew" {
+			fmt.Println("Submitted Text: ", StringReverse(documentText))
+		} else {
+			fmt.Println("Submitted Text: ", documentText)
+		}
 	}
 
 	if mime == "application/pdf" {
@@ -117,4 +122,13 @@ func errCheck(c echo.Context, err error) error {
 		})
 	}
 	return nil
+}
+
+// StringReverse func
+func StringReverse(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
 }
