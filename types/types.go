@@ -5,14 +5,9 @@ import (
 	"os"
 )
 
-// User type for data persistenceß
+// User struct for registering users
 type User struct {
-	Name  string `json:"name" form:"name" query:"name"`
-	Email string `json:"email" form:"email" query:"email"`
-}
-
-// UserFirst struct for registering users
-type UserFirst struct {
+	ID        int    `json:"id" form:"id" query:"id"`
 	FirstName string `json:"firstname" form:"firstname" query:"firstname"`
 	LastName  string `json:"lastname" form:"lastname" query:"lastname"`
 	Email     string `json:"email" form:"email" query:"email"`
