@@ -22,20 +22,16 @@ func main() {
 	e.GET("/transliterate", controllers.TransliterateController)
 	e.POST("/upload", controllers.UploadController)
 	e.GET("/upload", uploadRouteHandler)
+	e.GET("/signup", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, "SIGNUP")
+	})
 	e.Static("/tmp", "tmp")
-
-	// auth := e.Group("/auth")
-	// auth.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
-	// 	if username == "Joe" && password == "password" {
-	// 		return true, nil
-	// 	}
-	// 	return false, nil
-	// }))
 
 	// START
 	e.Logger.Fatal(e.Start(":3000"))
 }
 
+// for dev purposes
 func baseRouteHandler(c echo.Context) error {
 	resp := &types.Resp{
 		Code:    200,
@@ -44,6 +40,7 @@ func baseRouteHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, resp)
 }
 
+// for dev purposes
 func uploadRouteHandler(c echo.Context) error {
 	resp := &types.Resp{
 		Code:    200,
