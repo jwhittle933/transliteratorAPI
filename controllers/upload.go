@@ -40,9 +40,9 @@ func UploadController(c echo.Context) error {
 		zip := docxology.ExtractFileHTTP(file)
 		zipFile := zip.FindDoc("word/document.xml")
 		macroData = zipFile.XMLExtractText()
-		fmt.Println(macroData)
+		fmt.Println("Macro Data: ", macroData)
 		documentText = macroData.Text
-		fmt.Println(documentText)
+		fmt.Println("Document Text: ", documentText)
 		lang, transliteratedContents = engine.Transliterate(documentText)
 	}
 
