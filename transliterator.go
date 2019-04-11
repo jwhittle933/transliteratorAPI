@@ -15,6 +15,10 @@ import (
 
 func main() {
 	e, conn, err := start.Init()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(conn)
 
 	// MIDDLEWARE
 	mw.MiddleWare(e)
