@@ -14,6 +14,11 @@ type User struct {
 	Pass      string `json:"password" form:"password" query:"password"` //encrypt
 }
 
+// TextSubmission struct
+type TextSubmission struct {
+	Text string `json:"text" form:"text" query:"text"`
+}
+
 // Resp struct for basic response schema.
 type Resp struct {
 	Code    int64
