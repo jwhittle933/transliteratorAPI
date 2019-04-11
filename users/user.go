@@ -1,12 +1,12 @@
 package users
 
 import (
-	// "github.com/jwhittle933/transliteratorAPI/types"
 	"fmt"
 	"net/http"
 	"strconv"
 
-	"../types"
+	"github.com/jwhittle933/transliteratorAPI/types"
+
 	"github.com/labstack/echo"
 )
 
