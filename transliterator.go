@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	e := start.Init()
+	e, conn, err := start.Init()
 
 	// MIDDLEWARE
 	mw.MiddleWare(e)
