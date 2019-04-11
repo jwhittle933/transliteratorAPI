@@ -4,6 +4,7 @@ import (
 	// "github.com/jwhittle933/transliteratorAPI/types"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"../types"
 	"github.com/labstack/echo"
@@ -26,6 +27,8 @@ func CreateUser(c echo.Context) error {
 
 // GetUser func
 func GetUser(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	fmt.Println(id)
 	return nil
 }
 

@@ -18,23 +18,28 @@ func main() {
 
 	// MIDDLEWARE
 	mw.MiddleWare(e)
-	e.AutoTLSManager.Cache = autocert.DirCache("/cache")
+	e.AutoTLSManager.Cache = autocert.DirCache("/cache/.cache")
 
 	// ROUTES
 	e.GET("/", baseRouteHandler)
 	e.GET("/transliterate", controllers.TransliterateController)
 	e.POST("/upload", controllers.UploadController)
 	e.GET("/upload", uploadRouteHandler)
-	e.GET("/signup", func(c echo.Context) error {
+
+	// !! USER ROUTES
+	user := e.Group("/users")
+	user.GET("/signup", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, "SIGNUP")
 	})
-	e.POST("/signup", func(c echo.Context) error {
+	user.POST("/signup", func(c echo.Context) error {
 		email := c.FormValue("email")
 		password := c.FormValue("password")
 		fmt.Println(email)
 		fmt.Println(password)
 		return c.JSON(http.StatusOK, "SIGNUP")
 	})
+
+	// !! SERVE STATIC FILES
 	e.Static("/tmp", "tmp")
 
 	// START
