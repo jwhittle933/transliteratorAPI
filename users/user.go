@@ -1,6 +1,7 @@
 package users
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -11,7 +12,7 @@ import (
 )
 
 // CreateUser func
-func CreateUser(c echo.Context) error {
+func CreateUser(c echo.Context, conn *sql.DB) error {
 	u := &types.User{}
 
 	if err := c.Bind(u); err != nil {
@@ -26,18 +27,18 @@ func CreateUser(c echo.Context) error {
 }
 
 // GetUser func
-func GetUser(c echo.Context) error {
+func GetUser(c echo.Context, conn *sql.DB) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	fmt.Println(id)
 	return nil
 }
 
 // UpdateUser func
-func UpdateUser(c echo.Context) error {
+func UpdateUser(c echo.Context, conn *sql.DB) error {
 	return nil
 }
 
 // DeleteUser func
-func DeleteUser(c echo.Context) error {
+func DeleteUser(c echo.Context, conn *sql.DB) error {
 	return nil
 }

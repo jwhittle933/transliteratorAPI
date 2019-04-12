@@ -1,9 +1,18 @@
 package types
 
 import (
+	"database/sql"
 	"mime/multipart"
 	"os"
+
+	"github.com/labstack/echo"
 )
+
+// AppMeta struct for app level data exchange
+type AppMeta struct {
+	Echo *echo.Echo
+	DB   *sql.DB
+}
 
 // User struct for registering users
 type User struct {
