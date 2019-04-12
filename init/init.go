@@ -20,7 +20,7 @@ func Init() (*types.AppMeta, error) {
 	 *
 	 * MySQL driver imported in main
 	 */
-	conn, _ := sql.Open("mysql", "user:password@/dbname")
+	conn, _ := sql.Open("mysql", "root:[password]@/transliterator")
 	err := conn.Ping()
 	if err != nil {
 		return nil, err
