@@ -46,7 +46,9 @@ func main() {
 	})
 
 	// !! SERVE STATIC FILES
-	e.Static("/tmp", "tmp")
+	e.GET("/tmp/:user/:dir/:file", func(c echo.Context) error {
+		return c.File("/tmp/" + c.Param("file"))
+	})
 
 	// START
 	e.Logger.Fatal(e.Start(":3000"))
