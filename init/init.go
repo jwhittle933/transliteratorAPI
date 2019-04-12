@@ -10,7 +10,17 @@ import (
 func Init() (*echo.Echo, *sql.DB, error) {
 	e := echo.New()
 
-	conn, err := sql.Open("mysql", "user:password@/dbname")
+	/*
+	 * sql.Open() doesn't directly open a conection
+	 * and won't return error if the server isn't
+	 * available or the conn data isn't correct.
+	 *
+	 * Thus, sql.Ping() is used to check for err
+	 *
+	 * MySQL driver imported in main
+	 */
+	conn, _ := sql.Open("mysql", "user:password@/dbname")
+	err := conn.Ping()
 	if err != nil {
 		return nil, nil, err
 	}

@@ -35,10 +35,16 @@ func GetUser(c echo.Context, conn *sql.DB) error {
 
 // UpdateUser func
 func UpdateUser(c echo.Context, conn *sql.DB) error {
+	u := new(types.User)
+	if err := c.Bind(u); err != nil {
+		return err
+	}
 	return nil
 }
 
 // DeleteUser func
 func DeleteUser(c echo.Context, conn *sql.DB) error {
-	return nil
+	id, _ := strconv.Atoi(c.Param("id"))
+	fmt.Println(id)
+	return c.NoContent(http.StatusNoContent)
 }

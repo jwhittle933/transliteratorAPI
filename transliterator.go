@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/jwhittle933/transliteratorAPI/controllers"
 	start "github.com/jwhittle933/transliteratorAPI/init"
 	mw "github.com/jwhittle933/transliteratorAPI/middleware"
