@@ -58,11 +58,6 @@ func UploadController(c echo.Context) error {
 		lang, transliteratedContents = engine.Transliterate(string(src))
 	}
 
-	// tempFile, err := CreateTempFile(src)
-	// if err != nil {
-	// 	errCheck(c, err)
-	// }
-
 	errCheck(c, err)
 
 	return c.JSON(http.StatusOK, &types.UploadSuccess{
