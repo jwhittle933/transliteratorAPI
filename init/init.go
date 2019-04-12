@@ -3,11 +3,12 @@ package start
 import (
 	"database/sql"
 
+	"github.com/jwhittle933/transliteratorAPI/types"
 	"github.com/labstack/echo"
 )
 
 // Init func for instantiating
-func Init() (*echo.Echo, *sql.DB, error) {
+func Init() (*types.AppMeta, error) {
 	e := echo.New()
 
 	/*
@@ -22,8 +23,13 @@ func Init() (*echo.Echo, *sql.DB, error) {
 	conn, _ := sql.Open("mysql", "user:password@/dbname")
 	err := conn.Ping()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return e, conn, nil
+	app := &types.AppMeta{
+		Echo: e,
+		DB:   conn,
+	}
+
+	return app, nil
 }

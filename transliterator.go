@@ -16,24 +16,24 @@ import (
 )
 
 func main() {
-	e, conn, err := start.Init()
+	app, err := start.Init()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(conn)
+	fmt.Println(app.DB)
 
 	// MIDDLEWARE
-	mw.MiddleWare(e)
-	e.AutoTLSManager.Cache = autocert.DirCache("/cache/.cache")
+	mw.MiddleWare(app.Echo)
+	app.Echo.AutoTLSManager.Cache = autocert.DirCache("/cache/.cache")
 
 	// ROUTES
-	e.GET("/", baseRouteHandler)
-	e.GET("/transliterate", controllers.TransliterateController)
-	e.POST("/upload", controllers.UploadController)
-	e.GET("/upload", uploadRouteHandler)
+	app.Echo.GET("/", baseRouteHandler)
+	app.Echo.GET("/transliterate", controllers.TransliterateController)
+	app.Echo.POST("/upload", controllers.UploadController)
+	app.Echo.GET("/upload", uploadRouteHandler)
 
 	// !! USER ROUTES
-	user := e.Group("/users")
+	user := app.Echo.Group("/users")
 	user.GET("/signup", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, "SIGNUP")
 	})
@@ -46,10 +46,10 @@ func main() {
 	})
 
 	// !! SERVE STATIC FILES
-	e.GET("/tmp/:user/:dir/:file", controllers.DownloadFile)
+	app.Echo.GET("/tmp/:user/:dir/:file", controllers.DownloadFile)
 
 	// START
-	e.Logger.Fatal(e.Start(":3000"))
+	app.Echo.Logger.Fatal(app.Echo.Start(":3000"))
 }
 
 // for dev purposes
