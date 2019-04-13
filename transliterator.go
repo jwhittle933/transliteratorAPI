@@ -24,8 +24,8 @@ func main() {
 	// ROUTES
 	e.GET("/", baseRouteHandler)
 	e.GET("/transliterate", controllers.TransliterateController)
+	e.POST("/transliterate", controllers.TransliterateController)
 	e.POST("/upload", controllers.UploadController)
-	e.GET("/upload", uploadRouteHandler)
 
 	// !! USER ROUTES
 	user := e.Group("/users")
@@ -49,15 +49,6 @@ func baseRouteHandler(c echo.Context) error {
 	resp := &types.Resp{
 		Code:    200,
 		Message: "Transliterator API",
-	}
-	return c.JSON(http.StatusOK, resp)
-}
-
-// for dev purposes
-func uploadRouteHandler(c echo.Context) error {
-	resp := &types.Resp{
-		Code:    200,
-		Message: "Upload a file",
 	}
 	return c.JSON(http.StatusOK, resp)
 }
