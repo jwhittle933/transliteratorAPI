@@ -3,22 +3,31 @@ package users
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/labstack/echo"
 )
 
 // CreateUser func
 func CreateUser(c echo.Context, conn *sql.DB) error {
-	u := &User{}
+	first := c.FormValue("firstname")
+	last := c.FormValue("lastname")
 	email := c.FormValue("email")
 	password := c.FormValue("password")
-	fmt.Println(email)
-	fmt.Println(password)
+	crypt, err := hashPassword(password)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	if err := c.Bind(u); err != nil {
-		return err
+	u := &User{
+		FirstName: first,
+		LastName:  last,
+		Email:     email,
+		Pass:      crypt,
 	}
 
 	fmt.Println(u)
@@ -46,4 +55,9 @@ func DeleteUser(c echo.Context, conn *sql.DB) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	fmt.Println(id)
 	return c.NoContent(http.StatusNoContent)
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
 }
