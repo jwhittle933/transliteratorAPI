@@ -21,7 +21,7 @@ func Init() (*types.AppMeta, error) {
 	 *
 	 * MySQL driver imported in main
 	 */
-	conn, _ := sql.Open("mysql", "root:[password]@/transliterator")
+	conn, _ := sql.Open("mysql", "root:[password]@tcp(127.0.0.1:3306)/transliterator")
 	err := conn.Ping()
 	if err != nil {
 		log.Panicln("Connected to DB.")
