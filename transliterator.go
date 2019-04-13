@@ -1,7 +1,9 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -16,6 +18,22 @@ import (
 
 func main() {
 	e := echo.New()
+	/*
+	 * sql.Open() doesn't directly open a conection
+	 * and won't return error if the server isn't
+	 * available or the conn data isn't correct.
+	 *
+	 * Thus, sql.Ping() is used to check for err
+	 *
+	 * MySQL driver imported in main
+	 */
+	conn, _ := sql.Open("mysql", "root:[password]@tcp(127.0.0.1:3306)/transliterator")
+	err := conn.Ping()
+	if err != nil {
+		log.Panicln("Connected to DB.")
+		log.Fatal(err)
+	}
+	defer conn.Close()
 
 	// MIDDLEWARE
 	mw.MiddleWare(e)
