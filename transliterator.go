@@ -7,7 +7,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/jwhittle933/transliteratorAPI/controllers"
-	start "github.com/jwhittle933/transliteratorAPI/init"
 	mw "github.com/jwhittle933/transliteratorAPI/middleware"
 	"github.com/jwhittle933/transliteratorAPI/types"
 
@@ -16,24 +15,20 @@ import (
 )
 
 func main() {
-	app, err := start.Init()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(app.DB)
+	e := echo.New()
 
 	// MIDDLEWARE
-	mw.MiddleWare(app.Echo)
-	app.Echo.AutoTLSManager.Cache = autocert.DirCache("/cache/.cache")
+	mw.MiddleWare(e)
+	e.AutoTLSManager.Cache = autocert.DirCache("/cache/.cache")
 
 	// ROUTES
-	app.Echo.GET("/", baseRouteHandler)
-	app.Echo.GET("/transliterate", controllers.TransliterateController)
-	app.Echo.POST("/upload", controllers.UploadController)
-	app.Echo.GET("/upload", uploadRouteHandler)
+	e.GET("/", baseRouteHandler)
+	e.GET("/transliterate", controllers.TransliterateController)
+	e.POST("/upload", controllers.UploadController)
+	e.GET("/upload", uploadRouteHandler)
 
 	// !! USER ROUTES
-	user := app.Echo.Group("/users")
+	user := e.Group("/users")
 	user.POST("/create", func(c echo.Context) error {
 		email := c.FormValue("email")
 		password := c.FormValue("password")
@@ -43,10 +38,10 @@ func main() {
 	})
 
 	// !! SERVE STATIC FILES
-	app.Echo.GET("/tmp/:user/:dir/:file", controllers.DownloadFile)
+	e.GET("/tmp/:user/:dir/:file", controllers.DownloadFile)
 
 	// START
-	app.Echo.Logger.Fatal(app.Echo.Start(":3000"))
+	e.Logger.Fatal(e.Start(":3000"))
 }
 
 // for dev purposes

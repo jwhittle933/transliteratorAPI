@@ -6,14 +6,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/jwhittle933/transliteratorAPI/types"
-
 	"github.com/labstack/echo"
 )
 
 // CreateUser func
 func CreateUser(c echo.Context, conn *sql.DB) error {
-	u := &types.User{}
+	u := &User{}
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 	fmt.Println(email)
@@ -24,10 +22,7 @@ func CreateUser(c echo.Context, conn *sql.DB) error {
 	}
 
 	fmt.Println(u)
-	return c.JSON(http.StatusOK, &types.Resp{
-		Code:    http.StatusOK,
-		Message: "User successfully created.",
-	})
+	return c.JSON(http.StatusOK, http.StatusOK)
 }
 
 // GetUser func
@@ -39,7 +34,7 @@ func GetUser(c echo.Context, conn *sql.DB) error {
 
 // UpdateUser func
 func UpdateUser(c echo.Context, conn *sql.DB) error {
-	u := new(types.User)
+	u := new(User)
 	if err := c.Bind(u); err != nil {
 		return err
 	}
