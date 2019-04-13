@@ -27,13 +27,13 @@ func main() {
 	 *
 	 * MySQL driver imported in main
 	 */
-	conn, _ := sql.Open("mysql", "root:[password]@tcp(127.0.0.1:3306)/transliterator")
-	err := conn.Ping()
+	db, _ := sql.Open("mysql", "root:[password]@tcp(127.0.0.1:3306)/transliterator")
+	err := db.Ping()
 	if err != nil {
 		log.Panicln("Connected to DB.")
 		log.Fatal(err)
 	}
-	defer conn.Close()
+	defer db.Close()
 
 	// MIDDLEWARE
 	mw.MiddleWare(e)
