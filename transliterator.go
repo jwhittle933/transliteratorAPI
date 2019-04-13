@@ -34,10 +34,7 @@ func main() {
 
 	// !! USER ROUTES
 	user := app.Echo.Group("/users")
-	user.GET("/signup", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, "SIGNUP")
-	})
-	user.POST("/signup", func(c echo.Context) error {
+	user.POST("/create", func(c echo.Context) error {
 		email := c.FormValue("email")
 		password := c.FormValue("password")
 		fmt.Println(email)

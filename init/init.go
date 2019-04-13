@@ -2,6 +2,7 @@ package start
 
 import (
 	"database/sql"
+	"log"
 
 	"github.com/jwhittle933/transliteratorAPI/types"
 	"github.com/labstack/echo"
@@ -23,6 +24,7 @@ func Init() (*types.AppMeta, error) {
 	conn, _ := sql.Open("mysql", "root:[password]@/transliterator")
 	err := conn.Ping()
 	if err != nil {
+		log.Panicln("Connected to DB.")
 		return nil, err
 	}
 

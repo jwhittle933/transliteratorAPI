@@ -11,7 +11,6 @@ import (
 	"github.com/jwhittle933/docxology"
 
 	"github.com/jwhittle933/transliteratorAPI/engine"
-	"github.com/jwhittle933/transliteratorAPI/types"
 	"github.com/labstack/echo"
 )
 
@@ -60,7 +59,7 @@ func UploadController(c echo.Context) error {
 
 	errCheck(c, err)
 
-	return c.JSON(http.StatusOK, &types.UploadSuccess{
+	return c.JSON(http.StatusOK, &UploadSuccess{
 		Code:               http.StatusOK,
 		Message:            "File Succesfully read.",
 		Language:           lang,
@@ -110,7 +109,7 @@ func DestroyFile(fileLoc string) error {
 
 func errCheck(c echo.Context, err error) error {
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, &types.ErrorMessage{
+		return c.JSON(http.StatusBadRequest, &ErrorMessage{
 			Code:    http.StatusBadRequest,
 			Message: "There was an error.",
 		})

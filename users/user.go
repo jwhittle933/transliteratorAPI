@@ -14,6 +14,10 @@ import (
 // CreateUser func
 func CreateUser(c echo.Context, conn *sql.DB) error {
 	u := &types.User{}
+	email := c.FormValue("email")
+	password := c.FormValue("password")
+	fmt.Println(email)
+	fmt.Println(password)
 
 	if err := c.Bind(u); err != nil {
 		return err

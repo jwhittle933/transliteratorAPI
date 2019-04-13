@@ -4,16 +4,15 @@ import (
 	"net/http"
 
 	"github.com/jwhittle933/transliteratorAPI/engine"
-	"github.com/jwhittle933/transliteratorAPI/types"
 	"github.com/labstack/echo"
 )
 
 // TransliterateController route handler
 func TransliterateController(c echo.Context) error {
-	var erm *types.ErrorMessage
-	t := new(types.TextSubmission)
+	var erm *ErrorMessage
+	t := new(TextSubmission)
 	if err := c.Bind(t); err != nil {
-		erm = &types.ErrorMessage{
+		erm = &ErrorMessage{
 			Code:    http.StatusBadRequest,
 			Message: "Bad submission",
 		}
@@ -21,7 +20,7 @@ func TransliterateController(c echo.Context) error {
 	}
 
 	if t.Text == "" {
-		erm = &types.ErrorMessage{
+		erm = &ErrorMessage{
 			Code:    http.StatusBadRequest,
 			Message: "No text provided.",
 		}
@@ -29,7 +28,7 @@ func TransliterateController(c echo.Context) error {
 	}
 
 	if lang, output := engine.Transliterate(t.Text); output != "Error." {
-		response := &types.SuccessfulResponse{
+		response := &SuccessfulResponse{
 			Code:               http.StatusOK,
 			Message:            "Successful.",
 			Language:           lang,
@@ -38,7 +37,7 @@ func TransliterateController(c echo.Context) error {
 		}
 		return c.JSON(http.StatusOK, response)
 	}
-	erm = &types.ErrorMessage{
+	erm = &ErrorMessage{
 		Code:    http.StatusBadRequest,
 		Message: "Error",
 	}
